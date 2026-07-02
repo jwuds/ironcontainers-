@@ -1,0 +1,51 @@
+[
+  {
+    "slug": "shipping-containers",
+    "name": "Shipping Containers",
+    "blurb": "Standard, high cube, and specialty containers — new and used.",
+    "count": 110,
+    "heroImage": "https://www.conexdepot.com/wp-content/uploads/2019/09/20ft-standard-wwt-shipping-container.jpg"
+  },
+  {
+    "slug": "refrigerated-containers",
+    "name": "Refrigerated Containers",
+    "blurb": "Reefer containers for cold-chain storage and transport.",
+    "count": 170,
+    "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/10ft-Refrigerated-Container-For-Sale.jpg"
+  },
+  {
+    "slug": "refrigeration-units",
+    "name": "Refrigeration Units",
+    "blurb": "Thermo King and Carrier trailer/truck refrigeration units.",
+    "count": 176,
+    "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/Carrier-Clip-On-Generator-Set-0-1.jpg"
+  },
+  {
+    "slug": "gensets-power",
+    "name": "Gensets & Power Systems",
+    "blurb": "Undermount gensets and CAT electric power systems.",
+    "count": 47,
+    "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/Buy-carrier-Undermount-genset-UK.jpg"
+  },
+  {
+    "slug": "tanks",
+    "name": "Tanks",
+    "blurb": "Propane and NH3 storage tanks.",
+    "count": 57,
+    "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/Buy-1000-Gallon-Propane-Tanks-Online-2.jpg"
+  },
+  {
+    "slug": "trailers-chassis",
+    "name": "Trailers & Chassis",
+    "blurb": "LPG transport trailers, refrigerated trailers, chassis, and offshore containers.",
+    "count": 98,
+    "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/10-OFFSHORE-DNV-CONTAINER-1.jpg"
+  },
+  {
+    "slug": "accessories-parts",
+    "name": "Accessories & Parts",
+    "blurb": "Parts and accessories for containers and equipment.",
+    "count": 51,
+    "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/Buy-transformer-230v-460v-2.png"
+  }
+]

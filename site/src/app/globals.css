@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg: #131310;
+  --color-bg-raised: #1b1b16;
+  --color-bg-raised-2: #232320;
+  --color-border: #37372c;
+  --color-border-soft: #2a2a22;
+  --color-text: #f3f1e7;
+  --color-text-muted: #a7a495;
+  --color-text-faint: #6f6d60;
+  --color-accent: #ff5f1a;
+  --color-accent-hover: #ff7c3f;
+  --color-accent-ink: #200a00;
+  --color-safety: #ffc400;
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-bg-raised: var(--color-bg-raised);
+  --color-bg-raised-2: var(--color-bg-raised-2);
+  --color-border: var(--color-border);
+  --color-border-soft: var(--color-border-soft);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-faint: var(--color-text-faint);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-ink: var(--color-accent-ink);
+  --color-safety: var(--color-safety);
+  --font-display: var(--font-bebas), sans-serif;
+  --font-sans: var(--font-plex), sans-serif;
+  --font-mono: var(--font-plex-mono), monospace;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-plex), sans-serif;
+}
+
+/* Repeating diagonal hazard stripe, used sparingly as a divider / accent bar */
+.hazard-stripe {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-accent),
+    var(--color-accent) 10px,
+    var(--color-safety) 10px,
+    var(--color-safety) 20px
+  );
+}
+
+.hazard-stripe-thin {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-accent),
+    var(--color-accent) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+}
+
+/* Subtle grain overlay for atmosphere on dark hero sections */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+.clip-corner {
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+}
+
+.clip-corner-sm {
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rise-in {
+  animation: rise-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}

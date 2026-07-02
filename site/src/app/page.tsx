@@ -1,0 +1,178 @@
+import Image from "next/image";
+import Link from "next/link";
+import { getAllProducts, getGroups } from "@/lib/catalog";
+import CategoryTile from "@/components/CategoryTile";
+import ProductCard from "@/components/ProductCard";
+import { SITE } from "@/lib/site";
+
+export default function Home() {
+  const groups = getGroups();
+  const products = getAllProducts();
+  const totalUnits = products.length;
+
+  const heroImage =
+    groups.find((g) => g.slug === "refrigerated-containers")?.heroImage ??
+    groups[0]?.heroImage;
+
+  const featured = groups
+    .map((g) => products.find((p) => p.groups.includes(g.slug) && p.images.length > 0))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p));
+
+  return (
+    <div>
+      {/* Hero */}
+      <section className="relative grain overflow-hidden border-b border-border">
+        <div className="absolute inset-0">
+          {heroImage && (
+            <Image
+              src={heroImage}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover opacity-40"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/80 to-bg/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-bg via-bg/10 to-transparent" />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 pt-20 pb-16 sm:pt-28 sm:pb-24">
+          <span className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent">
+            <span className="h-1.5 w-1.5 bg-accent" />
+            {totalUnits} units in stock &middot; nationwide delivery
+          </span>
+          <h1 className="mt-4 font-display text-6xl sm:text-8xl leading-[0.9] tracking-wide max-w-3xl">
+            Heavy equipment,{" "}
+            <span className="text-accent">ready to move.</span>
+          </h1>
+          <p className="mt-5 max-w-xl text-text-muted text-base sm:text-lg">
+            Shipping containers, refrigeration units, gensets, tanks, and
+            trailers &mdash; sourced, inspected, and priced for construction,
+            logistics, and energy operations.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link
+              href="/search"
+              className="inline-flex items-center bg-accent text-accent-ink font-semibold px-6 py-3 clip-corner hover:bg-accent-hover transition-colors"
+            >
+              Browse the catalog
+            </Link>
+            <a
+              href="#quote"
+              className="inline-flex items-center border border-border px-6 py-3 font-semibold text-text hover:border-accent hover:text-accent transition-colors"
+            >
+              Request a Quote
+            </a>
+          </div>
+        </div>
+
+        {/* Nameplate stat strip */}
+        <div className="relative border-t border-border-soft bg-bg/60 backdrop-blur">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 grid grid-cols-2 sm:grid-cols-4 divide-x divide-border-soft font-mono">
+            {[
+              { label: "Units listed", value: String(totalUnits) },
+              { label: "Categories", value: String(groups.length) },
+              { label: "Delivery", value: "Nationwide" },
+              { label: "Financing", value: "Available" },
+            ].map((stat) => (
+              <div key={stat.label} className="px-4 py-4 sm:py-5 first:pl-0">
+                <div className="text-xl sm:text-2xl text-accent">{stat.value}</div>
+                <div className="text-[10px] sm:text-xs uppercase tracking-widest text-text-faint mt-1">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Category grid */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-20">
+        <div className="flex items-end justify-between mb-6">
+          <h2 className="font-display text-3xl sm:text-4xl tracking-wide">
+            Shop by category
+          </h2>
+          <Link
+            href="/search"
+            className="font-mono text-xs uppercase tracking-widest text-text-muted hover:text-accent transition-colors"
+          >
+            View all &rarr;
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:auto-rows-[180px]">
+          {groups.map((g, i) => (
+            <CategoryTile key={g.slug} group={g} index={i} large={i === 0} />
+          ))}
+        </div>
+      </section>
+
+      {/* Featured products */}
+      <section className="border-t border-border bg-bg-raised/40">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-20">
+          <div className="flex items-end justify-between mb-6">
+            <h2 className="font-display text-3xl sm:text-4xl tracking-wide">
+              From the yard
+            </h2>
+            <span className="font-mono text-xs uppercase tracking-widest text-text-faint">
+              One per category
+            </span>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3">
+            {featured.map((p, i) => (
+              <ProductCard key={p.slug} product={p} index={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Trust section */}
+      <section className="border-t border-border">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-20 grid gap-10 sm:grid-cols-3">
+          {[
+            {
+              title: "Inspected inventory",
+              body: "Every unit is photographed and documented before it's listed — what you see is what ships.",
+            },
+            {
+              title: "Nationwide delivery",
+              body: "Freight coordinated to your site, whether it's a single container or a fleet order.",
+            },
+            {
+              title: "Flexible terms",
+              body: "Financing available for qualifying buyers. Bulk and repeat-order pricing on request.",
+            },
+          ].map((item) => (
+            <div key={item.title} className="relative pl-5">
+              <span className="absolute left-0 top-1 h-full w-0.5 hazard-stripe-thin" />
+              <h3 className="font-display text-xl tracking-wide">
+                {item.title}
+              </h3>
+              <p className="mt-2 text-sm text-text-muted">{item.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Quote CTA */}
+      <section id="quote" className="border-t border-border bg-bg-raised">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+          <div>
+            <span className="font-mono text-xs uppercase tracking-widest text-accent">
+              Get a price
+            </span>
+            <h2 className="mt-2 font-display text-3xl sm:text-5xl tracking-wide max-w-lg">
+              Tell us what you need moved.
+            </h2>
+          </div>
+          <a
+            href={`mailto:sales@${SITE.name.toLowerCase()}.com?subject=Quote%20Request`}
+            className="inline-flex items-center bg-accent text-accent-ink font-semibold px-8 py-4 clip-corner hover:bg-accent-hover transition-colors self-start sm:self-auto"
+          >
+            Request a Quote &rarr;
+          </a>
+        </div>
+      </section>
+    </div>
+  );
+}
