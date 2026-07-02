@@ -1,0 +1,15 @@
+{
+  "name": "woo-product-scraper",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright scraper that crawls WooCommerce catalogs and exports products to a WooCommerce-import-ready CSV",
+  "type": "commonjs",
+  "main": "src/scraper.js",
+  "scripts": {
+    "start": "node src/scraper.js",
+    "postinstall": "playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.47.0"
+  }
+}
