@@ -6,6 +6,8 @@ import { getAllProducts, getGroups } from "@/lib/catalog";
 import { SITE } from "@/lib/site";
 import { CartProvider } from "@/lib/cart-context";
 import CartButton from "@/components/CartButton";
+import JsonLd from "@/components/JsonLd";
+import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 
 const bebas = Bebas_Neue({
   variable: "--font-bebas",
@@ -25,9 +27,46 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
 });
 
+const totalUnitsCount = getAllProducts().length;
+const siteDescription = `${totalUnitsCount} units in stock: shipping containers, refrigerated units, gensets, tanks, and trailers. Request a quote or buy online with nationwide delivery.`;
+
 export const metadata: Metadata = {
-  title: `${SITE.name} | Containers, Refrigeration & Industrial Gear`,
-  description: `${getAllProducts().length} units in stock: shipping containers, refrigerated units, gensets, tanks, and trailers. Request a quote or buy online.`,
+  metadataBase: new URL(SITE.url),
+  title: {
+    default: `${SITE.name} | Containers, Refrigeration & Industrial Gear`,
+    template: `%s | ${SITE.name}`,
+  },
+  description: siteDescription,
+  applicationName: SITE.name,
+  keywords: [
+    "shipping containers",
+    "conex boxes",
+    "refrigerated containers",
+    "reefer containers",
+    "propane tanks",
+    "gensets",
+    "storage containers for sale",
+    "container delivery",
+  ],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: SITE.name,
+    title: `${SITE.name} | Containers, Refrigeration & Industrial Gear`,
+    description: siteDescription,
+    url: SITE.url,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE.name} | Containers, Refrigeration & Industrial Gear`,
+    description: siteDescription,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
 };
 
 export default function RootLayout({
@@ -44,6 +83,7 @@ export default function RootLayout({
       className={`${bebas.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-text">
+        <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         <CartProvider>
         <div className="h-1.5 hazard-stripe" />
         <header className="sticky top-0 z-50 border-b border-border bg-bg/95 backdrop-blur">
@@ -153,7 +193,23 @@ export default function RootLayout({
                   Contact
                 </p>
                 <ul className="space-y-2 text-sm text-text-muted">
-                  <li>Mon&ndash;Fri, 8am&ndash;6pm</li>
+                  <li>
+                    <a
+                      href={`tel:${SITE.contact.phone}`}
+                      className="hover:text-accent transition-colors"
+                    >
+                      {SITE.contact.phoneDisplay}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href={`mailto:${SITE.contact.email}`}
+                      className="hover:text-accent transition-colors break-all"
+                    >
+                      {SITE.contact.email}
+                    </a>
+                  </li>
+                  <li>{SITE.contact.hours}</li>
                   <li>
                     <Link
                       href="/#quote"

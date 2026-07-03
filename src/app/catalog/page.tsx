@@ -2,7 +2,12 @@ import Link from "next/link";
 import { getAllProducts, getGroups } from "@/lib/catalog";
 import ProductCard from "@/components/ProductCard";
 
-export const metadata = { title: "Full Catalog | Catalog" };
+export const metadata = {
+  title: "Full Catalog",
+  description:
+    "Browse every unit in stock — shipping containers, refrigerated units, gensets, tanks, and trailers. Filter by category and sort by price.",
+  alternates: { canonical: "/catalog" },
+};
 
 const PAGE_SIZE = 24;
 

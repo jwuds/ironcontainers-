@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -12,10 +13,52 @@ import SpecTable from "@/components/SpecTable";
 import ExpandableText from "@/components/ExpandableText";
 import ProductCard from "@/components/ProductCard";
 import ReserveButton from "@/components/ReserveButton";
+import JsonLd from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
+import {
+  absoluteUrl,
+  breadcrumbJsonLd,
+  metaDescription,
+  productJsonLd,
+} from "@/lib/seo";
 
 export function generateStaticParams() {
   return getAllProducts().map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const product = getProductBySlug(slug);
+  if (!product) return { title: "Product not found" };
+
+  const description = metaDescription(
+    product.shortDescription || product.description || SITE.description
+  );
+  const image = product.images[0];
+  const url = `/product/${product.slug}`;
+
+  return {
+    title: product.title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      title: product.title,
+      description,
+      url: absoluteUrl(url),
+      images: image ? [{ url: absoluteUrl(image), alt: product.title }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.title,
+      description,
+      images: image ? [absoluteUrl(image)] : undefined,
+    },
+  };
 }
 
 export default async function ProductPage({
@@ -35,8 +78,17 @@ export default async function ProductPage({
   const numericPrice = Number(product.salePrice || product.regularPrice);
   const cartPrice = Number.isFinite(numericPrice) && numericPrice > 0 ? numericPrice : null;
 
+  const breadcrumbs = [
+    { name: "Home", path: "/" },
+    ...(primaryGroup
+      ? [{ name: primaryGroup.name, path: `/category/${primaryGroup.slug}` }]
+      : []),
+    { name: product.title, path: `/product/${product.slug}` },
+  ];
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14">
+      <JsonLd data={[productJsonLd(product), breadcrumbJsonLd(breadcrumbs)]} />
       <nav className="font-mono text-xs text-text-faint mb-6 flex items-center gap-1.5 flex-wrap">
         <Link href="/" className="hover:text-accent transition-colors">
           Home

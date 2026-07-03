@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -7,11 +8,40 @@ import {
   getSubCategories,
 } from "@/lib/catalog";
 import ProductCard from "@/components/ProductCard";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbJsonLd, collectionJsonLd } from "@/lib/seo";
 
 const PAGE_SIZE = 24;
 
 export function generateStaticParams() {
   return getGroups().map((g) => ({ slug: g.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const group = getGroupBySlug(slug);
+  if (!group) return { title: "Category not found" };
+
+  const description = `${group.blurb} Browse ${group.count} ${group.name.toLowerCase()} with nationwide delivery — request a quote or reserve online.`;
+  const url = `/category/${group.slug}`;
+  const hero = group.heroImage ?? undefined;
+
+  return {
+    title: group.name,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      title: group.name,
+      description,
+      url,
+      images: hero ? [{ url: hero, alt: group.name }] : undefined,
+    },
+  };
 }
 
 type SortKey = "default" | "price-asc" | "price-desc";
@@ -61,6 +91,15 @@ export default async function CategoryPage({
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14">
+      <JsonLd
+        data={[
+          collectionJsonLd(group, items),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: group.name, path: `/category/${group.slug}` },
+          ]),
+        ]}
+      />
       <nav className="font-mono text-xs text-text-faint mb-4">
         <Link href="/" className="hover:text-accent transition-colors">
           Home
