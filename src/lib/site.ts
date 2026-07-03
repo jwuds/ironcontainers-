@@ -1,6 +1,6 @@
-// Placeholder branding — swap these once a real name/tagline is decided.
 export const SITE = {
-  name: "Ironhold",
+  name: "Container One Depot",
+  domain: "containeronedepot.com",
   tagline: "Containers, refrigeration & industrial gear",
-  initial: "I",
+  initial: "C",
 };

@@ -29,6 +29,7 @@ export default async function ProductPage({
   const price = formatPrice(product.regularPrice);
   const salePrice = formatPrice(product.salePrice);
   const primaryGroup = product.groups[0] ? getGroupBySlug(product.groups[0]) : undefined;
+  const isOffshore = product.groups.includes("offshore-certified");
   const related = getRelatedProducts(product, 4);
 
   return (
@@ -104,12 +105,12 @@ export default async function ProductPage({
               </p>
             )}
             <a
-              href={`mailto:sales@${SITE.name.toLowerCase()}.com?subject=${encodeURIComponent(
+              href={`mailto:sales@${SITE.domain}?subject=${encodeURIComponent(
                 `Quote request: ${product.title}`
               )}`}
               className="mt-4 inline-flex w-full items-center justify-center bg-accent text-accent-ink font-semibold px-6 py-3 clip-corner-sm hover:bg-accent-hover transition-colors"
             >
-              {price ? "Request a Quote" : "Get Pricing"}
+              {isOffshore ? "Contact a Specialist" : price ? "Request a Quote" : "Get Pricing"}
             </a>
           </div>
 

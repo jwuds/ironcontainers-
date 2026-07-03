@@ -64,7 +64,7 @@ export default function ProductCard({
             </span>
           ) : (
             <span className="text-text-muted text-xs uppercase tracking-wider">
-              Request Quote
+              Price on request
             </span>
           )}
           {product.sku && (

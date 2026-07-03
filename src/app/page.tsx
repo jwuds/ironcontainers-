@@ -166,7 +166,7 @@ export default function Home() {
             </h2>
           </div>
           <a
-            href={`mailto:sales@${SITE.name.toLowerCase()}.com?subject=Quote%20Request`}
+            href={`mailto:sales@${SITE.domain}?subject=Quote%20Request`}
             className="inline-flex items-center bg-accent text-accent-ink font-semibold px-8 py-4 clip-corner hover:bg-accent-hover transition-colors self-start sm:self-auto"
           >
             Request a Quote &rarr;

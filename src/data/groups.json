@@ -2,57 +2,57 @@
   {
     "slug": "shipping-containers",
     "name": "Shipping Containers",
-    "blurb": "Standard, high cube, and specialty containers — new and used.",
-    "count": 87,
-    "heroImage": "/images/conexdepotshipping-10ft-refrigerated-container-for-sale-5777d75f.jpg"
+    "blurb": "Standard, high cube, and specialty dry containers — new and used.",
+    "count": 71,
+    "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/10ft-Refrigerated-Container-For-Sale.jpg"
   },
   {
     "slug": "refrigerated-containers",
     "name": "Refrigerated Containers",
     "blurb": "Reefer containers for cold-chain storage and transport.",
-    "count": 59,
-    "heroImage": "/images/cdn-untitled-1-1-549dd1ae.png"
+    "count": 57,
+    "heroImage": "https://cdn.shopify.com/s/files/1/0120/4849/8752/files/Untitled-1_1.png?v=1722632005"
   },
   {
-    "slug": "modified-containers",
-    "name": "Modified & Custom Containers",
-    "blurb": "Mobile offices, cabins, and other custom-built container conversions.",
-    "count": 20,
-    "heroImage": "/images/cdn-10ft-mobile-office-exterior-ac-a013a79e.jpg"
+    "slug": "offshore-certified",
+    "name": "Offshore & Certified Containers",
+    "blurb": "DNV 2.7-1 certified dry, half-height, open-top, and refrigerated units.",
+    "count": 11,
+    "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/10-OFFSHORE-DNV-CONTAINER-1.jpg"
   },
   {
-    "slug": "refrigeration-units",
-    "name": "Refrigeration Units",
-    "blurb": "Thermo King and Carrier trailer/truck refrigeration units.",
-    "count": 61,
-    "heroImage": "/images/conexdepotshipping-carrier-clip-on-generator-set-0-1-babfacf9.jpg"
+    "slug": "refrigeration-gensets",
+    "name": "Refrigeration Units & Gensets",
+    "blurb": "Thermo King and Carrier refrigeration units and undermount gensets.",
+    "count": 67,
+    "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/Carrier-Clip-On-Generator-Set-0-1.jpg"
   },
   {
-    "slug": "gensets-power",
-    "name": "Gensets & Power Systems",
-    "blurb": "Undermount gensets and CAT electric power systems.",
-    "count": 13,
-    "heroImage": "/images/conexdepotshipping-buy-carrier-undermount-genset-uk-03fc61f4.jpg"
+    "slug": "generators-power",
+    "name": "Generators & Power Systems",
+    "blurb": "Standalone CAT electric power systems.",
+    "count": 3,
+    "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/buy-CAT-Mobile-Generator-1.jpg"
   },
   {
     "slug": "tanks",
     "name": "Tanks",
     "blurb": "Propane and NH3 storage tanks.",
-    "count": 37,
-    "heroImage": "/images/conexdepotshipping-1000-gallon-underground-propane-tank-for-sale-354aa85c.jpg"
+    "count": 36,
+    "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/1000-Gallon-Underground-Propane-Tank-for-sale.jpg"
   },
   {
     "slug": "trailers-chassis",
     "name": "Trailers & Chassis",
-    "blurb": "LPG transport trailers, refrigerated trailers, chassis, and offshore containers.",
-    "count": 33,
-    "heroImage": "/images/conexdepotshipping-10-offshore-dnv-container-1-0ed90c47.jpg"
+    "blurb": "LPG transport trailers, refrigerated trailers, and container chassis.",
+    "count": 21,
+    "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/Buy-Polar-11600-Gallon-Propane-Tank-1.jpg"
   },
   {
     "slug": "accessories-parts",
     "name": "Accessories & Parts",
     "blurb": "Parts and accessories for containers and equipment.",
-    "count": 29,
-    "heroImage": "/images/conexdepotshipping-buy-transformer-230v-460v-2-5aae3da7.png"
+    "count": 30,
+    "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/Buy-transformer-230v-460v-2.png"
   }
 ]

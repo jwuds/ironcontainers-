@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Bebas_Neue, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
-import { getGroups } from "@/lib/catalog";
+import { getAllProducts, getGroups } from "@/lib/catalog";
 import { SITE } from "@/lib/site";
 
 const bebas = Bebas_Neue({
@@ -24,9 +24,8 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: `${SITE.name} Equipment | Containers, Refrigeration & Industrial Gear`,
-  description:
-    "185 units in stock: shipping containers, refrigerated units, gensets, tanks, and trailers. Request a quote or buy online.",
+  title: `${SITE.name} | Containers, Refrigeration & Industrial Gear`,
+  description: `${getAllProducts().length} units in stock: shipping containers, refrigerated units, gensets, tanks, and trailers. Request a quote or buy online.`,
 };
 
 export default function RootLayout({
@@ -35,6 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const groups = getGroups();
+  const totalUnits = getAllProducts().length;
 
   return (
     <html
@@ -162,8 +162,8 @@ export default function RootLayout({
               </div>
             </div>
             <div className="mt-10 pt-6 border-t border-border-soft flex flex-col sm:flex-row gap-2 justify-between text-xs text-text-faint font-mono">
-              <span>&copy; {new Date().getFullYear()} {SITE.name} Equipment</span>
-              <span>{groups.reduce((n, g) => n + g.count, 0)}+ units listed across {groups.length} categories</span>
+              <span>&copy; {new Date().getFullYear()} {SITE.name}</span>
+              <span>{totalUnits} units listed across {groups.length} categories</span>
             </div>
           </div>
         </footer>
