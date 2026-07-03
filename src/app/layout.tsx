@@ -123,7 +123,7 @@ export default function RootLayout({
                 </Link>
                 <CartButton />
                 <Link
-                  href="/#quote"
+                  href="/quote"
                   className="hidden sm:inline-flex items-center bg-accent text-accent-ink font-semibold text-sm px-4 py-2 clip-corner-sm hover:bg-accent-hover transition-colors"
                 >
                   Request a Quote
@@ -212,7 +212,7 @@ export default function RootLayout({
                   <li>{SITE.contact.hours}</li>
                   <li>
                     <Link
-                      href="/#quote"
+                      href="/quote"
                       className="hover:text-accent transition-colors"
                     >
                       Request a Quote &rarr;

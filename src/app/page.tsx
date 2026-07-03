@@ -3,7 +3,6 @@ import Link from "next/link";
 import { getAllProducts, getGroups } from "@/lib/catalog";
 import CategoryTile from "@/components/CategoryTile";
 import ProductCard from "@/components/ProductCard";
-import { SITE } from "@/lib/site";
 
 export default function Home() {
   const groups = getGroups();
@@ -58,12 +57,12 @@ export default function Home() {
             >
               Browse the catalog
             </Link>
-            <a
-              href="#quote"
+            <Link
+              href="/quote"
               className="inline-flex items-center border border-border px-6 py-3 font-semibold text-text hover:border-accent hover:text-accent transition-colors"
             >
               Request a Quote
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -165,12 +164,12 @@ export default function Home() {
               Tell us what you need moved.
             </h2>
           </div>
-          <a
-            href={`mailto:sales@${SITE.domain}?subject=Quote%20Request`}
+          <Link
+            href="/quote"
             className="inline-flex items-center bg-accent text-accent-ink font-semibold px-8 py-4 clip-corner hover:bg-accent-hover transition-colors self-start sm:self-auto"
           >
             Request a Quote &rarr;
-          </a>
+          </Link>
         </div>
       </section>
     </div>
