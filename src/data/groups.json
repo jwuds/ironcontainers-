@@ -3,15 +3,22 @@
     "slug": "shipping-containers",
     "name": "Shipping Containers",
     "blurb": "Standard, high cube, and specialty containers — new and used.",
-    "count": 62,
+    "count": 87,
     "heroImage": "/images/conexdepotshipping-10ft-refrigerated-container-for-sale-5777d75f.jpg"
   },
   {
     "slug": "refrigerated-containers",
     "name": "Refrigerated Containers",
     "blurb": "Reefer containers for cold-chain storage and transport.",
-    "count": 55,
-    "heroImage": "/images/conexdepotshipping-20ft-offshore-refrigerated-containers-1-acc30b87.jpg"
+    "count": 59,
+    "heroImage": "/images/cdn-untitled-1-1-549dd1ae.png"
+  },
+  {
+    "slug": "modified-containers",
+    "name": "Modified & Custom Containers",
+    "blurb": "Mobile offices, cabins, and other custom-built container conversions.",
+    "count": 20,
+    "heroImage": "/images/cdn-10ft-mobile-office-exterior-ac-a013a79e.jpg"
   },
   {
     "slug": "refrigeration-units",
@@ -45,7 +52,7 @@
     "slug": "accessories-parts",
     "name": "Accessories & Parts",
     "blurb": "Parts and accessories for containers and equipment.",
-    "count": 19,
+    "count": 29,
     "heroImage": "/images/conexdepotshipping-buy-transformer-230v-460v-2-5aae3da7.png"
   }
 ]

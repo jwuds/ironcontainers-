@@ -7,6 +7,7 @@
   "main": "src/scraper.js",
   "scripts": {
     "start": "node src/scraper.js",
+    "start:shopify": "node src/scraper-shopify.js",
     "postinstall": "playwright install chromium"
   },
   "dependencies": {

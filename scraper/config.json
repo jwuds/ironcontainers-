@@ -11,6 +11,12 @@
       "shopFallbackUrl": "https://conexdepotshipping.com/store/"
     }
   ],
+  "shopifySites": [
+    {
+      "name": "containerone",
+      "baseUrl": "https://containerone.net"
+    }
+  ],
   "concurrency": 3,
   "retries": 3,
   "retryBaseDelayMs": 1500,

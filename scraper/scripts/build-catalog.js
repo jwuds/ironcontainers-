@@ -4,7 +4,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const SRC = path.resolve(__dirname, '..', 'output', 'products.json');
+const OUTPUT_DIR = path.resolve(__dirname, '..', 'output');
+const SOURCES = ['products.json', 'containerone-products.json'];
 const OUT_DIR = path.resolve(__dirname, '..', '..', 'src', 'data');
 
 // Raw scraped category name -> group slug. Anything not listed here falls
@@ -49,10 +50,33 @@ const CATEGORY_TO_GROUP = {
   'DNV Offshore Containers': 'trailers-chassis',
 
   'Accessories and Parts': 'accessories-parts',
+
+  // containerone (Shopify) product_type / tags
+  Container: 'shipping-containers',
+  'Custom Container': 'modified-containers',
+  Accessories: 'accessories-parts',
+  'Refrigerated Shipping Container': 'refrigerated-containers',
 };
 
 // Dropped entirely from nav/grouping — junk or genuinely one-off listings.
-const DROPPED_CATEGORIES = new Set(['c', 'Container homes', 'Container pool', 'Chemical Applicators']);
+const DROPPED_CATEGORIES = new Set([
+  'c',
+  'Container homes',
+  'Container pool',
+  'Chemical Applicators',
+  // containerone tags that are just descriptive facets, not categories —
+  // the product's real group already comes from product_type above.
+  '1 Trip',
+  '20ft Shipping Container',
+  '40FT Shipping Container',
+  'Multi-Trip',
+  'Wind & Water Tight',
+  'Cargo Worthy',
+  'Economy Grade',
+  'Modified Shipping Container',
+  'Shipping Container Office',
+  'Accessory Kit',
+]);
 
 const GROUPS = [
   {
@@ -64,6 +88,11 @@ const GROUPS = [
     slug: 'refrigerated-containers',
     name: 'Refrigerated Containers',
     blurb: 'Reefer containers for cold-chain storage and transport.',
+  },
+  {
+    slug: 'modified-containers',
+    name: 'Modified & Custom Containers',
+    blurb: 'Mobile offices, cabins, and other custom-built container conversions.',
   },
   {
     slug: 'refrigeration-units',
@@ -145,8 +174,18 @@ function dedupeByTitle(raw) {
   return deduped;
 }
 
+function loadSources() {
+  const scraped = [];
+  for (const file of SOURCES) {
+    const p = path.join(OUTPUT_DIR, file);
+    if (!fs.existsSync(p)) continue;
+    scraped.push(...JSON.parse(fs.readFileSync(p, 'utf8')));
+  }
+  return scraped;
+}
+
 function main() {
-  const scraped = JSON.parse(fs.readFileSync(SRC, 'utf8'));
+  const scraped = loadSources();
   const raw = dedupeByTitle(scraped);
   const droppedDupes = scraped.length - raw.length;
 
