@@ -3,49 +3,49 @@
     "slug": "shipping-containers",
     "name": "Shipping Containers",
     "blurb": "Standard, high cube, and specialty containers — new and used.",
-    "count": 110,
-    "heroImage": "/images/conexdepot-20ft-standard-wwt-shipping-container-5f41fc97.jpg"
+    "count": 62,
+    "heroImage": "/images/conexdepotshipping-10ft-refrigerated-container-for-sale-5777d75f.jpg"
   },
   {
     "slug": "refrigerated-containers",
     "name": "Refrigerated Containers",
     "blurb": "Reefer containers for cold-chain storage and transport.",
-    "count": 170,
-    "heroImage": "/images/conexdepotshipping-10ft-refrigerated-container-for-sale-5777d75f.jpg"
+    "count": 55,
+    "heroImage": "/images/conexdepotshipping-20ft-offshore-refrigerated-containers-1-acc30b87.jpg"
   },
   {
     "slug": "refrigeration-units",
     "name": "Refrigeration Units",
     "blurb": "Thermo King and Carrier trailer/truck refrigeration units.",
-    "count": 176,
+    "count": 61,
     "heroImage": "/images/conexdepotshipping-carrier-clip-on-generator-set-0-1-babfacf9.jpg"
   },
   {
     "slug": "gensets-power",
     "name": "Gensets & Power Systems",
     "blurb": "Undermount gensets and CAT electric power systems.",
-    "count": 47,
+    "count": 13,
     "heroImage": "/images/conexdepotshipping-buy-carrier-undermount-genset-uk-03fc61f4.jpg"
   },
   {
     "slug": "tanks",
     "name": "Tanks",
     "blurb": "Propane and NH3 storage tanks.",
-    "count": 57,
-    "heroImage": "/images/conexdepotshipping-buy-1000-gallon-propane-tanks-online-2-6d55d1b9.jpg"
+    "count": 37,
+    "heroImage": "/images/conexdepotshipping-1000-gallon-underground-propane-tank-for-sale-354aa85c.jpg"
   },
   {
     "slug": "trailers-chassis",
     "name": "Trailers & Chassis",
     "blurb": "LPG transport trailers, refrigerated trailers, chassis, and offshore containers.",
-    "count": 98,
+    "count": 33,
     "heroImage": "/images/conexdepotshipping-10-offshore-dnv-container-1-0ed90c47.jpg"
   },
   {
     "slug": "accessories-parts",
     "name": "Accessories & Parts",
     "blurb": "Parts and accessories for containers and equipment.",
-    "count": 51,
+    "count": 19,
     "heroImage": "/images/conexdepotshipping-buy-transformer-230v-460v-2-5aae3da7.png"
   }
 ]

@@ -26,7 +26,7 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: `${SITE.name} Equipment | Containers, Refrigeration & Industrial Gear`,
   description:
-    "392 units in stock: shipping containers, refrigerated units, gensets, tanks, and trailers. Request a quote or buy online.",
+    "185 units in stock: shipping containers, refrigerated units, gensets, tanks, and trailers. Request a quote or buy online.",
 };
 
 export default function RootLayout({
@@ -55,6 +55,12 @@ export default function RootLayout({
                 </span>
               </Link>
               <nav className="hidden lg:flex items-center gap-1 overflow-x-auto">
+                <Link
+                  href="/catalog"
+                  className="px-3 py-2 text-sm font-medium text-text-muted hover:text-text transition-colors whitespace-nowrap"
+                >
+                  Full Catalog
+                </Link>
                 {groups.map((g) => (
                   <Link
                     key={g.slug}
@@ -128,6 +134,14 @@ export default function RootLayout({
                       </Link>
                     </li>
                   ))}
+                  <li>
+                    <Link
+                      href="/catalog"
+                      className="text-sm text-text-muted hover:text-accent transition-colors"
+                    >
+                      Full Catalog
+                    </Link>
+                  </li>
                 </ul>
               </div>
               <div>

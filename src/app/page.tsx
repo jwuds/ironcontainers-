@@ -53,7 +53,7 @@ export default function Home() {
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
-              href="/search"
+              href="/catalog"
               className="inline-flex items-center bg-accent text-accent-ink font-semibold px-6 py-3 clip-corner hover:bg-accent-hover transition-colors"
             >
               Browse the catalog
@@ -94,7 +94,7 @@ export default function Home() {
             Shop by category
           </h2>
           <Link
-            href="/search"
+            href="/catalog"
             className="font-mono text-xs uppercase tracking-widest text-text-muted hover:text-accent transition-colors"
           >
             View all &rarr;

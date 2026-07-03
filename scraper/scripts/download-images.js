@@ -1,5 +1,5 @@
-// Downloads every unique product image referenced in site/src/data/products.json
-// into site/public/images/, then rewrites products.json + groups.json to point
+// Downloads every unique product image referenced in ../src/data/products.json
+// into ../public/images/, then rewrites products.json + groups.json to point
 // at the local files instead of the remote conexdepot.com / conexdepotshipping.com
 // URLs. Run this after build-catalog.js. Resumable: already-downloaded files are
 // skipped on re-run.
@@ -8,8 +8,8 @@ const path = require("path");
 const crypto = require("crypto");
 const https = require("https");
 
-const DATA_DIR = path.resolve(__dirname, "..", "site", "src", "data");
-const IMAGES_DIR = path.resolve(__dirname, "..", "site", "public", "images");
+const DATA_DIR = path.resolve(__dirname, "..", "..", "src", "data");
+const IMAGES_DIR = path.resolve(__dirname, "..", "..", "public", "images");
 const PRODUCTS_PATH = path.join(DATA_DIR, "products.json");
 const GROUPS_PATH = path.join(DATA_DIR, "groups.json");
 

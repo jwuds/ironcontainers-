@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SRC = path.resolve(__dirname, '..', 'output', 'products.json');
-const OUT_DIR = path.resolve(__dirname, '..', 'site', 'src', 'data');
+const OUT_DIR = path.resolve(__dirname, '..', '..', 'src', 'data');
 
 // Raw scraped category name -> group slug. Anything not listed here falls
 // into "accessories-parts" as a catch-all, except the junk/one-off ones
@@ -109,8 +109,50 @@ function mapGroups(categories) {
   return [...groups];
 }
 
+function normalizeTitle(title) {
+  return (title || '').trim().replace(/\s+/g, ' ').toLowerCase();
+}
+
+// The source site republishes the same listing under a fresh URL/slug
+// multiple times (WordPress appends -2, -3, ... to dedupe the post slug).
+// Same title, same photos, near-identical description — just noise for
+// browsing. Collapse each group down to the single best-populated listing.
+function dedupeByTitle(raw) {
+  const groups = new Map();
+  for (const p of raw) {
+    const key = normalizeTitle(p.title);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(p);
+  }
+
+  const score = (p) =>
+    (p.regularPrice ? 1000 : 0) +
+    (p.images?.length || 0) * 10 +
+    (p.description?.length || 0) / 1000;
+
+  const deduped = [];
+  for (const entries of groups.values()) {
+    if (entries.length === 1) {
+      deduped.push(entries[0]);
+      continue;
+    }
+    let best = entries[0];
+    for (const p of entries.slice(1)) {
+      if (score(p) > score(best)) best = p;
+    }
+    deduped.push(best);
+  }
+  return deduped;
+}
+
 function main() {
-  const raw = JSON.parse(fs.readFileSync(SRC, 'utf8'));
+  const scraped = JSON.parse(fs.readFileSync(SRC, 'utf8'));
+  const raw = dedupeByTitle(scraped);
+  const droppedDupes = scraped.length - raw.length;
+
+  // Sort alphabetically up front so slug suffixes (and the default catalog
+  // order) are stable and deterministic across rebuilds.
+  raw.sort((a, b) => a.title.localeCompare(b.title));
 
   const slugCounts = new Map();
   const products = raw.map((p, idx) => {
@@ -150,6 +192,7 @@ function main() {
   fs.writeFileSync(path.join(OUT_DIR, 'products.json'), JSON.stringify(products));
   fs.writeFileSync(path.join(OUT_DIR, 'groups.json'), JSON.stringify(groups, null, 2));
 
+  console.log(`Dropped ${droppedDupes} duplicate listings (${scraped.length} scraped -> ${products.length} unique)`);
   console.log(`Wrote ${products.length} products across ${groups.length} groups to ${OUT_DIR}`);
   for (const g of groups) console.log(`  ${g.name}: ${g.count}`);
 }
