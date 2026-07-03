@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice, type Product } from "@/lib/catalog";
+import AddToCartButton from "@/components/AddToCartButton";
 
 export type ProductCardData = Pick<
   Product,
@@ -16,7 +17,9 @@ export default function ProductCard({
 }) {
   const price = formatPrice(product.regularPrice);
   const salePrice = formatPrice(product.salePrice);
-  const image = product.images[0];
+  const image = product.images[0] ?? null;
+  const numericPrice = Number(product.salePrice || product.regularPrice);
+  const cartPrice = Number.isFinite(numericPrice) && numericPrice > 0 ? numericPrice : null;
 
   return (
     <Link
@@ -73,6 +76,13 @@ export default function ProductCard({
             </span>
           )}
         </div>
+        <AddToCartButton
+          slug={product.slug}
+          title={product.title}
+          image={image}
+          price={cartPrice}
+          className="w-full border border-border-soft py-1.5 font-mono text-[10px] uppercase tracking-widest text-text-muted hover:border-accent hover:text-accent transition-colors disabled:opacity-60 disabled:hover:border-border-soft disabled:hover:text-text-muted"
+        />
       </div>
     </Link>
   );

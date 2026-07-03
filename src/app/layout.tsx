@@ -4,6 +4,8 @@ import Link from "next/link";
 import "./globals.css";
 import { getAllProducts, getGroups } from "@/lib/catalog";
 import { SITE } from "@/lib/site";
+import { CartProvider } from "@/lib/cart-context";
+import CartButton from "@/components/CartButton";
 
 const bebas = Bebas_Neue({
   variable: "--font-bebas",
@@ -42,6 +44,7 @@ export default function RootLayout({
       className={`${bebas.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-text">
+        <CartProvider>
         <div className="h-1.5 hazard-stripe" />
         <header className="sticky top-0 z-50 border-b border-border bg-bg/95 backdrop-blur">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -78,6 +81,7 @@ export default function RootLayout({
                 >
                   Search
                 </Link>
+                <CartButton />
                 <Link
                   href="/#quote"
                   className="hidden sm:inline-flex items-center bg-accent text-accent-ink font-semibold text-sm px-4 py-2 clip-corner-sm hover:bg-accent-hover transition-colors"
@@ -167,6 +171,7 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
+        </CartProvider>
       </body>
     </html>
   );

@@ -11,6 +11,7 @@ import Gallery from "@/components/Gallery";
 import SpecTable from "@/components/SpecTable";
 import ExpandableText from "@/components/ExpandableText";
 import ProductCard from "@/components/ProductCard";
+import ReserveButton from "@/components/ReserveButton";
 import { SITE } from "@/lib/site";
 
 export function generateStaticParams() {
@@ -31,6 +32,8 @@ export default async function ProductPage({
   const primaryGroup = product.groups[0] ? getGroupBySlug(product.groups[0]) : undefined;
   const isOffshore = product.groups.includes("offshore-certified");
   const related = getRelatedProducts(product, 4);
+  const numericPrice = Number(product.salePrice || product.regularPrice);
+  const cartPrice = Number.isFinite(numericPrice) && numericPrice > 0 ? numericPrice : null;
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14">
@@ -112,6 +115,14 @@ export default async function ProductPage({
             >
               {isOffshore ? "Contact a Specialist" : price ? "Request a Quote" : "Get Pricing"}
             </a>
+            {!isOffshore && (
+              <ReserveButton
+                slug={product.slug}
+                title={product.title}
+                image={product.images[0] ?? null}
+                price={cartPrice}
+              />
+            )}
           </div>
 
           {product.shortDescription && (
