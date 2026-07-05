@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Group } from "@/lib/catalog";
@@ -8,6 +9,14 @@ import type { Group } from "@/lib/catalog";
 export default function MobileNav({ groups }: { groups: Group[] }) {
   const [open, setOpen] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // Portal target (document.body) doesn't exist during SSR; this only
+    // flips after hydration so the portal never renders on the server.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -42,11 +51,13 @@ export default function MobileNav({ groups }: { groups: Group[] }) {
         </svg>
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <>
-            <motion.div
-              key="backdrop"
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {open && (
+              <>
+                <motion.div
+                  key="backdrop"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -191,10 +202,12 @@ export default function MobileNav({ groups }: { groups: Group[] }) {
                   </Link>
                 </li>
               </ul>
-            </motion.nav>
-          </>
+                </motion.nav>
+              </>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </>
   );
 }
