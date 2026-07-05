@@ -6,11 +6,21 @@ import { motion } from "framer-motion";
 import { useCart, depositFor } from "@/lib/cart-context";
 import { formatPrice } from "@/lib/catalog";
 import { SITE } from "@/lib/site";
+import { PaymentMethodDialog, type PaymentSummary } from "@/components/PaymentMethodDialog";
+
+const METHOD_LABEL: Record<PaymentSummary["method"], string> = {
+  creditcard: "Credit Card",
+  paypal: "PayPal",
+  applepay: "Apple Pay",
+  zelle: "Zelle",
+  banktransfer: "Bank Transfer",
+};
 
 export default function CheckoutPage() {
   const { items, clear } = useCart();
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", zip: "" });
+  const [payment, setPayment] = useState<PaymentSummary | null>(null);
   const totalDeposit = items.reduce((sum, i) => sum + depositFor(i.price), 0);
 
   if (submitted) {
@@ -55,6 +65,13 @@ export default function CheckoutPage() {
       `Email: ${form.email}`,
       `Phone: ${form.phone || "n/a"}`,
       `Delivery ZIP: ${form.zip || "n/a"}`,
+      `Preferred payment method: ${
+        payment
+          ? payment.method === "creditcard"
+            ? `${METHOD_LABEL[payment.method]} ending in ${payment.last4 || "----"}`
+            : METHOD_LABEL[payment.method]
+          : "n/a"
+      }`,
       "",
       "Units:",
       ...items.map((i) => `- ${i.title} (deposit ${formatPrice(String(depositFor(i.price)))})`),
@@ -131,6 +148,17 @@ export default function CheckoutPage() {
               className="mt-1 w-full border border-border-soft bg-bg-raised px-3 py-2 text-sm focus:border-accent outline-none transition-colors"
             />
           </div>
+        </div>
+
+        <div>
+          <span className="mb-1.5 block font-mono text-xs uppercase tracking-widest text-text-faint">
+            Payment Method (optional)
+          </span>
+          <PaymentMethodDialog value={payment} onSave={setPayment} />
+          <p className="mt-1.5 text-xs text-text-faint">
+            Confirms your preference only &mdash; card details are never stored or sent.
+            Our team collects the deposit securely by phone.
+          </p>
         </div>
 
         <div className="pt-2 flex justify-between font-mono text-sm">

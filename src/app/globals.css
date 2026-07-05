@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 :root {
   --color-bg: #131310;
@@ -13,6 +14,23 @@
   --color-accent-hover: #ff7c3f;
   --color-accent-ink: #200a00;
   --color-safety: #ffc400;
+
+  /* shadcn/ui-compatible aliases, mapped onto the brand palette above so
+     Radix-based components (dialogs, inputs, etc.) inherit the site theme
+     instead of introducing a second, disconnected color system. */
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-text);
+  --color-primary: var(--color-accent);
+  --color-primary-foreground: var(--color-accent-ink);
+  --color-secondary: var(--color-bg-raised);
+  --color-secondary-foreground: var(--color-text);
+  --color-muted: var(--color-bg-raised-2);
+  --color-muted-foreground: var(--color-text-muted);
+  --color-accent-foreground: var(--color-accent-ink);
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #fef2f2;
+  --color-input: var(--color-border);
+  --color-ring: var(--color-accent);
 }
 
 @theme inline {
@@ -28,6 +46,19 @@
   --color-accent-hover: var(--color-accent-hover);
   --color-accent-ink: var(--color-accent-ink);
   --color-safety: var(--color-safety);
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-primary: var(--color-primary);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-foreground: var(--color-secondary-foreground);
+  --color-muted: var(--color-muted);
+  --color-muted-foreground: var(--color-muted-foreground);
+  --color-accent-foreground: var(--color-accent-foreground);
+  --color-destructive: var(--color-destructive);
+  --color-destructive-foreground: var(--color-destructive-foreground);
+  --color-input: var(--color-input);
+  --color-ring: var(--color-ring);
   --font-display: var(--font-bebas), sans-serif;
   --font-sans: var(--font-plex), sans-serif;
   --font-mono: var(--font-plex-mono), monospace;
