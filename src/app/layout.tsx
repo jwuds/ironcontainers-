@@ -54,11 +54,11 @@ export default function RootLayout({
         <header className="sticky top-0 z-50 border-b border-border bg-bg/95 backdrop-blur">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <div className="flex h-16 items-center gap-6">
-              <Link href="/" className="flex items-center gap-2 shrink-0">
-                <span className="grid h-8 w-8 place-items-center bg-accent text-accent-ink font-display text-xl clip-corner-sm">
+              <Link href="/" className="flex items-center gap-2 min-w-0 shrink">
+                <span className="grid h-8 w-8 shrink-0 place-items-center bg-accent text-accent-ink font-display text-xl clip-corner-sm">
                   {SITE.initial}
                 </span>
-                <span className="font-display text-2xl tracking-wide">
+                <span className="font-display text-lg sm:text-2xl tracking-wide truncate">
                   {SITE.name.toUpperCase()}<span className="text-accent">.</span>
                 </span>
               </Link>
