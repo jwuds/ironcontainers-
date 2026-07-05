@@ -3,6 +3,9 @@ import Link from "next/link";
 import { getAllProducts, getGroups } from "@/lib/catalog";
 import CategoryTile from "@/components/CategoryTile";
 import ProductCard from "@/components/ProductCard";
+import WhyBuyGrid from "@/components/WhyBuyGrid";
+import IndustriesGrid from "@/components/IndustriesGrid";
+import HowItWorks from "@/components/HowItWorks";
 import { SITE } from "@/lib/site";
 
 export default function Home() {
@@ -47,24 +50,28 @@ export default function Home() {
             <span className="text-accent">ready to move.</span>
           </h1>
           <p className="mt-5 max-w-xl text-text-muted text-base sm:text-lg">
-            Shipping containers, refrigeration units, gensets, tanks, and
-            trailers &mdash; sourced, inspected, and priced for construction,
-            logistics, and energy operations.
+            Quality shipping containers, generators, tanks, refrigerated units
+            and industrial equipment &mdash; in stock and ready to ship now.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
               href="/catalog"
               className="inline-flex items-center bg-accent text-accent-ink font-semibold px-6 py-3 clip-corner hover:bg-accent-hover transition-colors"
             >
-              Browse the catalog
+              Shop Inventory
             </Link>
-            <a
-              href="#quote"
-              className="inline-flex items-center border border-border px-6 py-3 font-semibold text-text hover:border-accent hover:text-accent transition-colors"
-            >
-              Request a Quote
-            </a>
+            {featured[0] && (
+              <Link
+                href={`/product/${featured[0].slug}`}
+                className="inline-flex items-center border border-border px-6 py-3 font-semibold text-text hover:border-accent hover:text-accent transition-colors"
+              >
+                Reserve a Unit
+              </Link>
+            )}
           </div>
+          <p className="mt-5 font-mono text-xs uppercase tracking-widest text-text-muted">
+            &#10003; In Stock &nbsp; &#10003; Financing Available &nbsp; &#10003; Inspected Equipment
+          </p>
         </div>
 
         {/* Nameplate stat strip */}
@@ -107,6 +114,9 @@ export default function Home() {
         </div>
       </section>
 
+      <WhyBuyGrid />
+      <IndustriesGrid />
+
       {/* Featured products */}
       <section className="border-t border-border bg-bg-raised/40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-20">
@@ -114,63 +124,54 @@ export default function Home() {
             <h2 className="font-display text-3xl sm:text-4xl tracking-wide">
               From the yard
             </h2>
-            <span className="font-mono text-xs uppercase tracking-widest text-text-faint">
-              One per category
-            </span>
+            <Link
+              href="/catalog"
+              className="font-mono text-xs uppercase tracking-widest text-text-muted hover:text-accent transition-colors"
+            >
+              View Full Inventory &rarr;
+            </Link>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3">
             {featured.map((p, i) => (
-              <ProductCard key={p.slug} product={p} index={i} />
+              <ProductCard key={p.slug} product={p} index={i} reserveFlow />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Trust section */}
-      <section className="border-t border-border">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-20 grid gap-10 sm:grid-cols-3">
-          {[
-            {
-              title: "Inspected inventory",
-              body: "Every unit is photographed and documented before it's listed — what you see is what ships.",
-            },
-            {
-              title: "Nationwide delivery",
-              body: "Freight coordinated to your site, whether it's a single container or a fleet order.",
-            },
-            {
-              title: "Flexible terms",
-              body: "Financing available for qualifying buyers. Bulk and repeat-order pricing on request.",
-            },
-          ].map((item) => (
-            <div key={item.title} className="relative pl-5">
-              <span className="absolute left-0 top-1 h-full w-0.5 hazard-stripe-thin" />
-              <h3 className="font-display text-xl tracking-wide">
-                {item.title}
-              </h3>
-              <p className="mt-2 text-sm text-text-muted">{item.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <HowItWorks />
 
-      {/* Quote CTA */}
-      <section id="quote" className="border-t border-border bg-bg-raised">
+      {/* Financing + Final CTA */}
+      <section id="financing" className="border-t border-border bg-accent text-accent-ink">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
           <div>
-            <span className="font-mono text-xs uppercase tracking-widest text-accent">
-              Get a price
+            <span className="font-mono text-xs uppercase tracking-widest">
+              Financing
             </span>
             <h2 className="mt-2 font-display text-3xl sm:text-5xl tracking-wide max-w-lg">
-              Tell us what you need moved.
+              Need it now? Get financed today.
             </h2>
+            <p className="mt-3 max-w-lg text-sm sm:text-base text-accent-ink/80">
+              Flexible financing for qualified buyers on containers, gensets,
+              tanks, and trailers.
+            </p>
           </div>
-          <a
-            href={`mailto:sales@${SITE.domain}?subject=Quote%20Request`}
-            className="inline-flex items-center bg-accent text-accent-ink font-semibold px-8 py-4 clip-corner hover:bg-accent-hover transition-colors self-start sm:self-auto"
-          >
-            Request a Quote &rarr;
-          </a>
+          <div className="flex flex-col sm:items-end gap-3">
+            <a
+              href={`mailto:sales@${SITE.domain}?subject=${encodeURIComponent(
+                "Financing pre-qualification"
+              )}`}
+              className="inline-flex items-center bg-bg text-text font-semibold px-8 py-4 clip-corner hover:bg-bg-raised transition-colors"
+            >
+              Get Pre-Qualified &rarr;
+            </a>
+            <Link
+              href="/catalog"
+              className="inline-flex items-center font-semibold px-2 py-1 text-accent-ink/90 hover:text-accent-ink underline underline-offset-4"
+            >
+              Browse Inventory
+            </Link>
+          </div>
         </div>
       </section>
     </div>

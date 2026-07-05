@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatPrice, type Product } from "@/lib/catalog";
 import AddToCartButton from "@/components/AddToCartButton";
+import ReserveNowButton from "@/components/ReserveNowButton";
 
 export type ProductCardData = Pick<
   Product,
@@ -11,9 +12,11 @@ export type ProductCardData = Pick<
 export default function ProductCard({
   product,
   index = 0,
+  reserveFlow = false,
 }: {
   product: ProductCardData;
   index?: number;
+  reserveFlow?: boolean;
 }) {
   const price = formatPrice(product.regularPrice);
   const salePrice = formatPrice(product.salePrice);
@@ -76,13 +79,23 @@ export default function ProductCard({
             </span>
           )}
         </div>
-        <AddToCartButton
-          slug={product.slug}
-          title={product.title}
-          image={image}
-          price={cartPrice}
-          className="w-full border border-border-soft py-1.5 font-mono text-[10px] uppercase tracking-widest text-text-muted hover:border-accent hover:text-accent transition-colors disabled:opacity-60 disabled:hover:border-border-soft disabled:hover:text-text-muted"
-        />
+        {reserveFlow ? (
+          <ReserveNowButton
+            slug={product.slug}
+            title={product.title}
+            image={image}
+            price={cartPrice}
+            className="w-full border border-accent/60 py-1.5 font-mono text-[10px] uppercase tracking-widest text-accent hover:bg-accent hover:text-accent-ink transition-colors"
+          />
+        ) : (
+          <AddToCartButton
+            slug={product.slug}
+            title={product.title}
+            image={image}
+            price={cartPrice}
+            className="w-full border border-border-soft py-1.5 font-mono text-[10px] uppercase tracking-widest text-text-muted hover:border-accent hover:text-accent transition-colors disabled:opacity-60 disabled:hover:border-border-soft disabled:hover:text-text-muted"
+          />
+        )}
       </div>
     </Link>
   );

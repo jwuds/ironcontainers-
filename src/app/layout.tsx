@@ -6,6 +6,9 @@ import { getAllProducts, getGroups } from "@/lib/catalog";
 import { SITE } from "@/lib/site";
 import { CartProvider } from "@/lib/cart-context";
 import CartButton from "@/components/CartButton";
+import AnnouncementBar from "@/components/AnnouncementBar";
+import MobileNav from "@/components/MobileNav";
+import NewsletterForm from "@/components/NewsletterForm";
 
 const bebas = Bebas_Neue({
   variable: "--font-bebas",
@@ -45,10 +48,11 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-bg text-text">
         <CartProvider>
+        <AnnouncementBar />
         <div className="h-1.5 hazard-stripe" />
         <header className="sticky top-0 z-50 border-b border-border bg-bg/95 backdrop-blur">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
-            <div className="flex h-16 items-center justify-between gap-6">
+            <div className="flex h-16 items-center justify-between gap-4">
               <Link href="/" className="flex items-center gap-2 shrink-0">
                 <span className="grid h-8 w-8 place-items-center bg-accent text-accent-ink font-display text-xl clip-corner-sm">
                   {SITE.initial}
@@ -57,37 +61,39 @@ export default function RootLayout({
                   {SITE.name.toUpperCase()}<span className="text-accent">.</span>
                 </span>
               </Link>
-              <nav className="hidden lg:flex items-center gap-1 overflow-x-auto">
-                <Link
-                  href="/catalog"
-                  className="px-3 py-2 text-sm font-medium text-text-muted hover:text-text transition-colors whitespace-nowrap"
-                >
-                  Full Catalog
-                </Link>
-                {groups.map((g) => (
-                  <Link
-                    key={g.slug}
-                    href={`/category/${g.slug}`}
-                    className="px-3 py-2 text-sm font-medium text-text-muted hover:text-text transition-colors whitespace-nowrap"
-                  >
-                    {g.name}
-                  </Link>
-                ))}
-              </nav>
-              <div className="flex items-center gap-3 shrink-0">
+              <div className="flex items-center gap-1 shrink-0">
                 <Link
                   href="/search"
-                  className="text-sm font-medium text-text-muted hover:text-text transition-colors"
+                  aria-label="Search"
+                  className="grid h-11 w-11 place-items-center text-text-muted hover:text-text transition-colors"
                 >
-                  Search
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+                    <path
+                      d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm11 16-5.6-5.6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 </Link>
+                <a
+                  href={`tel:${SITE.phone}`}
+                  aria-label={`Call ${SITE.phoneDisplay}`}
+                  className="grid h-11 w-11 place-items-center text-text-muted hover:text-accent transition-colors"
+                >
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+                    <path
+                      d="M4 4.5c0-.6.4-1 1-1h2.4c.5 0 .9.3 1 .8l.8 3a1 1 0 0 1-.3 1L7.4 9.8a12 12 0 0 0 5.8 5.8l1.5-1.5a1 1 0 0 1 1-.3l3 .8c.5.1.8.5.8 1V18c0 .6-.4 1-1 1h-1C9.4 19 4 13.6 4 6.5v-1Z"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </a>
                 <CartButton />
-                <Link
-                  href="/#quote"
-                  className="hidden sm:inline-flex items-center bg-accent text-accent-ink font-semibold text-sm px-4 py-2 clip-corner-sm hover:bg-accent-hover transition-colors"
-                >
-                  Request a Quote
-                </Link>
+                <MobileNav groups={groups} />
               </div>
             </div>
           </div>
@@ -108,27 +114,10 @@ export default function RootLayout({
               </div>
               <div>
                 <p className="font-mono text-xs uppercase tracking-widest text-text-faint mb-3">
-                  Catalog
+                  Products
                 </p>
                 <ul className="space-y-2">
-                  {groups.slice(0, 4).map((g) => (
-                    <li key={g.slug}>
-                      <Link
-                        href={`/category/${g.slug}`}
-                        className="text-sm text-text-muted hover:text-accent transition-colors"
-                      >
-                        {g.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <p className="font-mono text-xs uppercase tracking-widest text-text-faint mb-3">
-                  More
-                </p>
-                <ul className="space-y-2">
-                  {groups.slice(4).map((g) => (
+                  {groups.map((g) => (
                     <li key={g.slug}>
                       <Link
                         href={`/category/${g.slug}`}
@@ -150,19 +139,61 @@ export default function RootLayout({
               </div>
               <div>
                 <p className="font-mono text-xs uppercase tracking-widest text-text-faint mb-3">
-                  Contact
+                  Company
                 </p>
-                <ul className="space-y-2 text-sm text-text-muted">
-                  <li>Mon&ndash;Fri, 8am&ndash;6pm</li>
+                <ul className="space-y-2">
                   <li>
                     <Link
-                      href="/#quote"
-                      className="hover:text-accent transition-colors"
+                      href="/about"
+                      className="text-sm text-text-muted hover:text-accent transition-colors"
                     >
-                      Request a Quote &rarr;
+                      About
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/contact"
+                      className="text-sm text-text-muted hover:text-accent transition-colors"
+                    >
+                      Contact
                     </Link>
                   </li>
                 </ul>
+                <p className="font-mono text-xs uppercase tracking-widest text-text-faint mt-6 mb-3">
+                  Support
+                </p>
+                <ul className="space-y-2">
+                  <li>
+                    <Link
+                      href="/#financing"
+                      className="text-sm text-text-muted hover:text-accent transition-colors"
+                    >
+                      Financing
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/#how-it-works"
+                      className="text-sm text-text-muted hover:text-accent transition-colors"
+                    >
+                      Shipping Info
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-mono text-xs uppercase tracking-widest text-text-faint mb-3">
+                  Stay in the loop
+                </p>
+                <ul className="space-y-2 text-sm text-text-muted mb-4">
+                  <li>{SITE.hours}</li>
+                  <li>
+                    <a href={`tel:${SITE.phone}`} className="hover:text-accent transition-colors">
+                      {SITE.phoneDisplay}
+                    </a>
+                  </li>
+                </ul>
+                <NewsletterForm />
               </div>
             </div>
             <div className="mt-10 pt-6 border-t border-border-soft flex flex-col sm:flex-row gap-2 justify-between text-xs text-text-faint font-mono">
