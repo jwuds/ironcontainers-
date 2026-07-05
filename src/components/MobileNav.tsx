@@ -29,7 +29,7 @@ export default function MobileNav({ groups }: { groups: Group[] }) {
         onClick={() => setOpen(true)}
         aria-label="Open menu"
         aria-expanded={open}
-        className="grid h-11 w-11 place-items-center text-text-muted hover:text-text transition-colors"
+        className="grid h-11 w-11 place-items-center text-text-muted hover:text-text transition-colors lg:hidden"
       >
         <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
           <path
@@ -161,6 +161,15 @@ export default function MobileNav({ groups }: { groups: Group[] }) {
                     className="flex items-center min-h-[44px] px-4 text-sm font-medium hover:text-accent hover:bg-bg-raised transition-colors"
                   >
                     Financing
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/blog"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center min-h-[44px] px-4 text-sm font-medium hover:text-accent hover:bg-bg-raised transition-colors"
+                  >
+                    Blog
                   </Link>
                 </li>
                 <li>

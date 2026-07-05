@@ -78,10 +78,14 @@ export default function WhyBuyGrid() {
           {items.map((item, i) => (
             <div
               key={item.label}
-              className="rise-in bg-bg-raised border border-border-soft p-4"
+              className="rise-in group bg-bg-raised border border-border-soft p-4 transition-all duration-300 hover:-translate-y-1 hover:border-accent/60 hover:shadow-lg hover:shadow-accent/5"
               style={{ animationDelay: `${i * 60}ms` }}
             >
-              <svg viewBox="0 0 24 24" className="h-6 w-6 text-accent mb-3" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                className="h-6 w-6 text-accent mb-3 transition-transform duration-300 group-hover:scale-110"
+                aria-hidden="true"
+              >
                 {item.icon}
               </svg>
               <h3 className="font-semibold text-sm leading-snug">{item.label}</h3>

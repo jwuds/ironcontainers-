@@ -96,13 +96,19 @@ export default function IndustriesGrid() {
           {industries.map((item, i) => (
             <div
               key={item.name}
-              className="rise-in flex flex-col items-center gap-2 border border-border-soft bg-bg py-6 px-3 text-center"
+              className="rise-in group flex flex-col items-center gap-2 border border-border-soft bg-bg py-6 px-3 text-center transition-all duration-300 hover:-translate-y-1 hover:border-accent/60 hover:bg-bg-raised"
               style={{ animationDelay: `${i * 50}ms` }}
             >
-              <svg viewBox="0 0 24 24" className="h-6 w-6 text-accent" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                className="h-6 w-6 text-accent transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
+                aria-hidden="true"
+              >
                 {item.icon}
               </svg>
-              <span className="text-xs font-medium text-text-muted">{item.name}</span>
+              <span className="text-xs font-medium text-text-muted transition-colors group-hover:text-text">
+                {item.name}
+              </span>
             </div>
           ))}
         </div>

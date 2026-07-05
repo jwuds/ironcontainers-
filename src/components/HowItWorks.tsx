@@ -26,11 +26,15 @@ export default function HowItWorks() {
         </h2>
         <div className="grid gap-8 sm:grid-cols-4 sm:gap-6">
           {steps.map((step, i) => (
-            <div key={step.title} className="relative rise-in" style={{ animationDelay: `${i * 80}ms` }}>
+            <div
+              key={step.title}
+              className="group relative rise-in"
+              style={{ animationDelay: `${i * 80}ms` }}
+            >
               {i < steps.length - 1 && (
                 <div className="hidden sm:block absolute top-5 left-[calc(50%+24px)] right-[calc(-50%+24px)] h-px bg-border" />
               )}
-              <span className="relative z-10 grid h-10 w-10 place-items-center bg-accent text-accent-ink font-display text-lg clip-corner-sm">
+              <span className="relative z-10 grid h-10 w-10 place-items-center bg-accent text-accent-ink font-display text-lg clip-corner-sm transition-transform duration-300 group-hover:scale-110">
                 {i + 1}
               </span>
               <h3 className="mt-3 font-semibold text-sm">{step.title}</h3>

@@ -8,6 +8,7 @@ import { CartProvider } from "@/lib/cart-context";
 import CartButton from "@/components/CartButton";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import MobileNav from "@/components/MobileNav";
+import DesktopNav from "@/components/DesktopNav";
 import NewsletterForm from "@/components/NewsletterForm";
 
 const bebas = Bebas_Neue({
@@ -52,7 +53,7 @@ export default function RootLayout({
         <div className="h-1.5 hazard-stripe" />
         <header className="sticky top-0 z-50 border-b border-border bg-bg/95 backdrop-blur">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
-            <div className="flex h-16 items-center justify-between gap-4">
+            <div className="flex h-16 items-center gap-6">
               <Link href="/" className="flex items-center gap-2 shrink-0">
                 <span className="grid h-8 w-8 place-items-center bg-accent text-accent-ink font-display text-xl clip-corner-sm">
                   {SITE.initial}
@@ -61,7 +62,8 @@ export default function RootLayout({
                   {SITE.name.toUpperCase()}<span className="text-accent">.</span>
                 </span>
               </Link>
-              <div className="flex items-center gap-1 shrink-0">
+              <DesktopNav groups={groups} />
+              <div className="ml-auto flex items-center gap-1 shrink-0">
                 <Link
                   href="/search"
                   aria-label="Search"
@@ -142,6 +144,14 @@ export default function RootLayout({
                   Company
                 </p>
                 <ul className="space-y-2">
+                  <li>
+                    <Link
+                      href="/blog"
+                      className="text-sm text-text-muted hover:text-accent transition-colors"
+                    >
+                      Blog
+                    </Link>
+                  </li>
                   <li>
                     <Link
                       href="/about"
