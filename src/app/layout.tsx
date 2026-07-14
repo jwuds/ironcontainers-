@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import Image from "next/image";
 import Link from "next/link";
 import "./globals.css";
 import { getAllProducts, getGroups } from "@/lib/catalog";
@@ -55,9 +56,14 @@ export default function RootLayout({
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <div className="flex h-16 items-center gap-6">
               <Link href="/" className="flex items-center gap-2 min-w-0 shrink">
-                <span className="grid h-8 w-8 shrink-0 place-items-center bg-accent text-accent-ink font-display text-xl clip-corner-sm">
-                  {SITE.initial}
-                </span>
+                <Image
+                  src="/logo-mark-256.png"
+                  alt=""
+                  width={36}
+                  height={36}
+                  className="h-9 w-9 shrink-0 object-contain"
+                  priority
+                />
                 <span className="font-display text-lg sm:text-2xl tracking-wide truncate">
                   {SITE.name.toUpperCase()}<span className="text-accent">.</span>
                 </span>
@@ -107,9 +113,18 @@ export default function RootLayout({
           <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12">
             <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
               <div className="col-span-2 sm:col-span-1">
-                <span className="font-display text-2xl tracking-wide">
-                  {SITE.name.toUpperCase()}<span className="text-accent">.</span>
-                </span>
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/logo-mark-256.png"
+                    alt=""
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 shrink-0 object-contain"
+                  />
+                  <span className="font-display text-2xl tracking-wide">
+                    {SITE.name.toUpperCase()}<span className="text-accent">.</span>
+                  </span>
+                </div>
                 <p className="mt-3 text-sm text-text-muted max-w-xs">
                   {SITE.tagline}. Nationwide delivery.
                 </p>
