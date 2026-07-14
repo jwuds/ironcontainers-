@@ -4,6 +4,7 @@ import { getAllPosts } from "@/lib/blog";
 export const metadata = {
   title: "Blog | Container One Depot",
   description: "Buying guides, financing info, and how-tos for containers, refrigeration units, and industrial equipment.",
+  alternates: { canonical: "/blog" },
 };
 
 export default function BlogIndexPage() {

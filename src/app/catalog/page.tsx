@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllProducts, getGroups } from "@/lib/catalog";
 import ProductCard from "@/components/ProductCard";
 
-export const metadata = { title: "Full Catalog | Catalog" };
+export function generateMetadata(): Metadata {
+  const total = getAllProducts().length;
+  return {
+    title: `Full Catalog — ${total} Units In Stock`,
+    description: `Browse all ${total} units in stock: shipping containers, refrigerated containers, gensets, tanks, and trailers. Filter by category, size, condition, and price.`,
+    alternates: { canonical: "/catalog" },
+  };
+}
 
 const PAGE_SIZE = 24;
 

@@ -11,6 +11,7 @@ import AnnouncementBar from "@/components/AnnouncementBar";
 import MobileNav from "@/components/MobileNav";
 import DesktopNav from "@/components/DesktopNav";
 import NewsletterForm from "@/components/NewsletterForm";
+import { JsonLd } from "@/components/JsonLd";
 
 const bebas = Bebas_Neue({
   variable: "--font-bebas",
@@ -30,9 +31,48 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
 });
 
+const DEFAULT_TITLE = `${SITE.name} | Containers, Refrigeration & Industrial Gear`;
+const DEFAULT_DESCRIPTION = `${getAllProducts().length} units in stock: shipping containers, refrigerated units, gensets, tanks, and trailers. Request a quote or buy online.`;
+
 export const metadata: Metadata = {
-  title: `${SITE.name} | Containers, Refrigeration & Industrial Gear`,
-  description: `${getAllProducts().length} units in stock: shipping containers, refrigerated units, gensets, tanks, and trailers. Request a quote or buy online.`,
+  metadataBase: new URL(SITE.url),
+  title: {
+    default: DEFAULT_TITLE,
+    template: `%s | ${SITE.name}`,
+  },
+  description: DEFAULT_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    siteName: SITE.name,
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    url: SITE.url,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+  },
+};
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: SITE.name,
+  url: SITE.url,
+  logo: `${SITE.url}/logo-mark-256.png`,
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      telephone: SITE.phone,
+      contactType: "sales",
+      areaServed: "US",
+      availableLanguage: "English",
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -49,6 +89,7 @@ export default function RootLayout({
       className={`${bebas.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-text">
+        <JsonLd data={organizationJsonLd} />
         <CartProvider>
         <AnnouncementBar />
         <div className="h-1.5 hazard-stripe" />

@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllProducts, getGroups } from "@/lib/catalog";
 import { SITE } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description: `Learn about ${SITE.name}: how we source and list shipping containers, refrigerated units, gensets, tanks, and trailers, with nationwide delivery.`,
+  alternates: { canonical: "/about" },
+};
 
 export default function AboutPage() {
   const groups = getGroups();

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -12,10 +13,29 @@ import SpecTable from "@/components/SpecTable";
 import ExpandableText from "@/components/ExpandableText";
 import ProductCard from "@/components/ProductCard";
 import ReserveButton from "@/components/ReserveButton";
+import { JsonLd } from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
 
 export function generateStaticParams() {
   return getAllProducts().map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const product = getProductBySlug(slug);
+  if (!product) return {};
+  const description =
+    product.shortDescription || product.description || `${product.title} — in stock at ${SITE.name}, nationwide delivery available.`;
+  return {
+    title: product.title,
+    description: description.slice(0, 160),
+    alternates: { canonical: `/product/${slug}` },
+    openGraph: product.images[0] ? { images: [product.images[0]] } : undefined,
+  };
 }
 
 export default async function ProductPage({
@@ -34,9 +54,58 @@ export default async function ProductPage({
   const related = getRelatedProducts(product, 4);
   const numericPrice = Number(product.salePrice || product.regularPrice);
   const cartPrice = Number.isFinite(numericPrice) && numericPrice > 0 ? numericPrice : null;
+  const canonicalUrl = `${SITE.url}/product/${product.slug}`;
+
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: product.shortDescription || product.description || undefined,
+    image: product.images.map((img) => `${SITE.url}${img}`),
+    sku: product.sku || undefined,
+    url: canonicalUrl,
+    brand: { "@type": "Organization", name: SITE.name },
+    ...(cartPrice
+      ? {
+          offers: {
+            "@type": "Offer",
+            url: canonicalUrl,
+            priceCurrency: "USD",
+            price: cartPrice,
+            availability: "https://schema.org/InStock",
+          },
+        }
+      : {}),
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE.url },
+      ...(primaryGroup
+        ? [
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: primaryGroup.name,
+              item: `${SITE.url}/category/${primaryGroup.slug}`,
+            },
+          ]
+        : []),
+      {
+        "@type": "ListItem",
+        position: primaryGroup ? 3 : 2,
+        name: product.title,
+        item: canonicalUrl,
+      },
+    ],
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14">
+      <JsonLd data={productJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
       <nav className="font-mono text-xs text-text-faint mb-6 flex items-center gap-1.5 flex-wrap">
         <Link href="/" className="hover:text-accent transition-colors">
           Home

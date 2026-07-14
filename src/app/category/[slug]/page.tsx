@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -7,11 +8,29 @@ import {
   getSubCategories,
 } from "@/lib/catalog";
 import ProductCard from "@/components/ProductCard";
+import { JsonLd } from "@/components/JsonLd";
+import { SITE } from "@/lib/site";
 
 const PAGE_SIZE = 24;
 
 export function generateStaticParams() {
   return getGroups().map((g) => ({ slug: g.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const group = getGroupBySlug(slug);
+  if (!group) return {};
+  const count = getProductsByGroup(slug).length;
+  return {
+    title: `${group.name} — ${count} Unit${count === 1 ? "" : "s"} In Stock`,
+    description: `${group.blurb} Browse ${count} unit${count === 1 ? "" : "s"} in stock with nationwide delivery.`,
+    alternates: { canonical: `/category/${slug}` },
+  };
 }
 
 type SortKey = "default" | "price-asc" | "price-desc";
@@ -59,8 +78,32 @@ export default async function CategoryPage({
     return `/category/${slug}${qs ? `?${qs}` : ""}`;
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE.url },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: group.name,
+        item: `${SITE.url}/category/${slug}`,
+      },
+    ],
+  };
+
+  const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `${group.name} — ${SITE.name}`,
+    description: group.blurb,
+    url: `${SITE.url}/category/${slug}`,
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14">
+      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={collectionJsonLd} />
       <nav className="font-mono text-xs text-text-faint mb-4">
         <Link href="/" className="hover:text-accent transition-colors">
           Home

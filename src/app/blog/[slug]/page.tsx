@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
+import { JsonLd } from "@/components/JsonLd";
+import { SITE } from "@/lib/site";
 
 export function generateStaticParams() {
   return getAllPosts().map((post) => ({ slug: post.slug }));
@@ -17,6 +19,7 @@ export async function generateMetadata({
   return {
     title: `${post.title} | Container One Depot`,
     description: post.excerpt,
+    alternates: { canonical: `/blog/${slug}` },
   };
 }
 
@@ -29,8 +32,20 @@ export default async function BlogPostPage({
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
+  const blogPostingJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    url: `${SITE.url}/blog/${slug}`,
+    author: { "@type": "Organization", name: SITE.name },
+    publisher: { "@type": "Organization", name: SITE.name },
+  };
+
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 py-16 sm:py-20">
+      <JsonLd data={blogPostingJsonLd} />
       <Link
         href="/blog"
         className="font-mono text-xs uppercase tracking-widest text-text-faint hover:text-accent transition-colors"

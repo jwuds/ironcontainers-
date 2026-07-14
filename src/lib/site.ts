@@ -1,6 +1,7 @@
 export const SITE = {
   name: "Container One Depot",
   domain: "containeronedepot.com",
+  url: "https://www.containeronedepot.com",
   tagline: "Containers, refrigeration & industrial gear",
   phone: "+14342921444",
   phoneDisplay: "(434) 292-1444",
