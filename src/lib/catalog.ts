@@ -71,6 +71,61 @@ export function getSubCategories(groupSlug: string): { name: string; count: numb
     .sort((a, b) => b.count - a.count);
 }
 
+const SPAM_MARKERS = [
+  /\bfor sale\b/i,
+  /\bbuy\b[^.!?]*\bonline\b/i,
+  /\bnear me\b/i,
+  /\bwholesale prices?\b/i,
+  /\bjoin thousands\b/i,
+  /\bdiscover the unparalleled\b/i,
+  /\bthe top choice for\b/i,
+  /\band save!/i,
+  /\bunparalleled benefits\b/i,
+];
+
+function splitSentences(text: string): string[] {
+  return text
+    .replace(/\s+/g, " ")
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function isCleanSentence(s: string): boolean {
+  if (s.length < 30 || s.length > 260) return false;
+  if (SPAM_MARKERS.some((re) => re.test(s))) return false;
+  return /\b(the|and|with|for|is|are|this|our|of|to|a|an)\b/i.test(s);
+}
+
+/**
+ * Scraped product copy often opens with a run-on chain of repeated
+ * keyword variants ("Buy X Online X for Sale X..."). This extracts the
+ * first genuinely clean, spam-marker-free sentence(s) instead, without
+ * inventing any new copy.
+ */
+export function getCleanExcerpt(
+  text: string | null | undefined,
+  fallback: string,
+  maxLen = 155
+): string {
+  if (!text) return fallback;
+  const sentences = splitSentences(text);
+  const clean = sentences.filter(isCleanSentence);
+  const source = clean.length ? clean : sentences;
+  if (!source.length) return fallback;
+
+  let out = source[0];
+  for (let i = 1; i < source.length; i++) {
+    const next = `${out} ${source[i]}`;
+    if (next.length > maxLen) break;
+    out = next;
+  }
+  if (out.length > maxLen) {
+    out = out.slice(0, maxLen - 1).replace(/\s+\S*$/, "") + "…";
+  }
+  return out;
+}
+
 export function formatPrice(value: string | null): string | null {
   if (!value) return null;
   const num = Number(value);

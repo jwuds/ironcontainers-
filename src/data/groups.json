@@ -10,7 +10,7 @@
     "slug": "refrigerated-containers",
     "name": "Refrigerated Containers",
     "blurb": "Reefer containers for cold-chain storage and transport.",
-    "count": 57,
+    "count": 56,
     "heroImage": "/images/cdn-untitled-1-1-549dd1ae.png"
   },
   {
@@ -24,7 +24,7 @@
     "slug": "refrigeration-gensets",
     "name": "Refrigeration Units & Gensets",
     "blurb": "Thermo King and Carrier refrigeration units and undermount gensets.",
-    "count": 67,
+    "count": 66,
     "heroImage": "/images/conexdepotshipping-carrier-clip-on-generator-set-0-1-babfacf9.jpg"
   },
   {
@@ -52,7 +52,7 @@
     "slug": "accessories-parts",
     "name": "Accessories & Parts",
     "blurb": "Parts and accessories for containers and equipment.",
-    "count": 30,
+    "count": 29,
     "heroImage": "/images/conexdepotshipping-buy-transformer-230v-460v-2-5aae3da7.png"
   }
 ]

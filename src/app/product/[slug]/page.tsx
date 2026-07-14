@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import {
   formatPrice,
   getAllProducts,
+  getCleanExcerpt,
   getGroupBySlug,
   getProductBySlug,
   getRelatedProducts,
@@ -28,11 +29,14 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = getProductBySlug(slug);
   if (!product) return {};
-  const description =
-    product.shortDescription || product.description || `${product.title} — in stock at ${SITE.name}, nationwide delivery available.`;
+  const fallback = `${product.title} — in stock at ${SITE.name}, nationwide delivery available.`;
+  const description = getCleanExcerpt(
+    product.shortDescription || product.description,
+    fallback
+  );
   return {
     title: product.title,
-    description: description.slice(0, 160),
+    description,
     alternates: { canonical: `/product/${slug}` },
     openGraph: product.images[0] ? { images: [product.images[0]] } : undefined,
   };
@@ -55,12 +59,17 @@ export default async function ProductPage({
   const numericPrice = Number(product.salePrice || product.regularPrice);
   const cartPrice = Number.isFinite(numericPrice) && numericPrice > 0 ? numericPrice : null;
   const canonicalUrl = `${SITE.url}/product/${product.slug}`;
+  const cleanDescription = getCleanExcerpt(
+    product.shortDescription || product.description,
+    `${product.title} — in stock at ${SITE.name}, nationwide delivery available.`,
+    300
+  );
 
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.title,
-    description: product.shortDescription || product.description || undefined,
+    description: cleanDescription,
     image: product.images.map((img) => `${SITE.url}${img}`),
     sku: product.sku || undefined,
     url: canonicalUrl,
