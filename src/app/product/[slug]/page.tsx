@@ -186,7 +186,7 @@ export default async function ProductPage({
               </p>
             )}
             <a
-              href={`mailto:sales@${SITE.domain}?subject=${encodeURIComponent(
+              href={`mailto:${SITE.email}?subject=${encodeURIComponent(
                 `Quote request: ${product.title}`
               )}`}
               className="mt-4 inline-flex w-full items-center justify-center bg-accent text-accent-ink font-semibold px-6 py-3 clip-corner-sm hover:bg-accent-hover transition-colors"

@@ -78,7 +78,7 @@ export default function CheckoutPage() {
       "",
       `Total deposit due: ${formatPrice(String(totalDeposit))}`,
     ];
-    const href = `mailto:sales@${SITE.domain}?subject=${encodeURIComponent(
+    const href = `mailto:${SITE.email}?subject=${encodeURIComponent(
       `Reservation request (${items.length} unit${items.length === 1 ? "" : "s"})`
     )}&body=${encodeURIComponent(lines.join("\n"))}`;
     window.location.href = href;

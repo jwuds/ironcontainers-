@@ -8,7 +8,7 @@ export default function NewsletterForm() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const href = `mailto:sales@${SITE.domain}?subject=${encodeURIComponent(
+    const href = `mailto:${SITE.email}?subject=${encodeURIComponent(
       "Newsletter signup"
     )}&body=${encodeURIComponent(`Please add this email to the list: ${email}`)}`;
     window.location.href = href;

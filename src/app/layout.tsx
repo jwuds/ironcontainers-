@@ -68,6 +68,7 @@ const organizationJsonLd = {
     {
       "@type": "ContactPoint",
       telephone: SITE.phone,
+      email: SITE.email,
       contactType: "sales",
       areaServed: "US",
       availableLanguage: "English",
@@ -256,6 +257,11 @@ export default function RootLayout({
                   <li>
                     <a href={`tel:${SITE.phone}`} className="hover:text-accent transition-colors">
                       {SITE.phoneDisplay}
+                    </a>
+                  </li>
+                  <li>
+                    <a href={`mailto:${SITE.email}`} className="hover:text-accent transition-colors">
+                      {SITE.email}
                     </a>
                   </li>
                 </ul>

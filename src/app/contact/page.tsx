@@ -10,7 +10,7 @@ export default function ContactPage() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const href = `mailto:sales@${SITE.domain}?subject=${encodeURIComponent(
+    const href = `mailto:${SITE.email}?subject=${encodeURIComponent(
       `Contact form: ${form.name || "Website visitor"}`
     )}&body=${encodeURIComponent(
       `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`
@@ -36,10 +36,10 @@ export default function ContactPage() {
         </li>
         <li>
           <a
-            href={`mailto:sales@${SITE.domain}`}
+            href={`mailto:${SITE.email}`}
             className="hover:text-accent transition-colors"
           >
-            sales@{SITE.domain}
+            {SITE.email}
           </a>
         </li>
       </ul>

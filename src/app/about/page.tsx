@@ -55,10 +55,10 @@ export default function AboutPage() {
           </li>
           <li>
             <a
-              href={`mailto:sales@${SITE.domain}`}
+              href={`mailto:${SITE.email}`}
               className="hover:text-accent transition-colors"
             >
-              sales@{SITE.domain}
+              {SITE.email}
             </a>
           </li>
         </ul>

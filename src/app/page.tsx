@@ -177,7 +177,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col sm:items-end gap-3">
             <a
-              href={`mailto:sales@${SITE.domain}?subject=${encodeURIComponent(
+              href={`mailto:${SITE.email}?subject=${encodeURIComponent(
                 "Financing pre-qualification"
               )}`}
               className="inline-flex items-center bg-bg text-text font-semibold px-8 py-4 clip-corner hover:bg-bg-raised transition-colors hover:-translate-y-0.5 active:translate-y-0 transition-transform"
