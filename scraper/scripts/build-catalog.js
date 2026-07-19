@@ -256,10 +256,25 @@ function isLocationCodeNotSku(sku) {
   return /^[A-Za-z]+_[A-Z]{2}$/.test(sku);
 }
 
+// dedupeByTitle only collapses exact-normalized-title matches. These pairs
+// describe the same physical listing (identical price and specs, confirmed
+// by hand) under wording different enough to survive that pass — singular
+// vs. plural, "GenSet" vs. "Generator Set", etc. Drop the duplicate outright
+// rather than just redirect it away, so it stops existing as a catalog
+// entry, not just as a route. Pair with a 301 in next.config.ts for any
+// inbound link to the dropped slug.
+const KNOWN_DUPLICATE_TITLES = new Set([
+  '10ft Refrigerated Containers 10ft Freezer', // dup of "10ft Refrigerated Container 10ft Freezer"
+  '30000 Gallon Skid Tanks ASME Storage Tanks on Skids', // dup of "30000 Gallon Propane Tanks ASME Storage Skids Tanks"
+  'Carrier Clip-On GenSet', // dup of "Carrier Clip-On Generator Set"
+  '20ft Flat Rack Shipping Containers 20ft', // dup of "20ft Flat Rack Container 20ft"
+]);
+
 function main() {
   const scraped = loadSources().filter((p) => !isIncompleteSourceListing(p));
-  const raw = dedupeByTitle(scraped);
-  const droppedDupes = scraped.length - raw.length;
+  const deduped = dedupeByTitle(scraped);
+  const raw = deduped.filter((p) => !KNOWN_DUPLICATE_TITLES.has(cleanTitle(p.title)));
+  const droppedDupes = scraped.length - deduped.length + (deduped.length - raw.length);
 
   // Sort alphabetically up front so slug suffixes (and the default catalog
   // order) are stable and deterministic across rebuilds.

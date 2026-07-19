@@ -3,14 +3,14 @@
     "slug": "shipping-containers",
     "name": "Shipping Containers",
     "blurb": "Standard, high cube, and specialty dry containers — new and used.",
-    "count": 71,
+    "count": 69,
     "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/10ft-Refrigerated-Container-For-Sale.jpg"
   },
   {
     "slug": "refrigerated-containers",
     "name": "Refrigerated Containers",
     "blurb": "Reefer containers for cold-chain storage and transport.",
-    "count": 57,
+    "count": 56,
     "heroImage": "https://cdn.shopify.com/s/files/1/0120/4849/8752/files/Untitled-1_1.png?v=1722632005"
   },
   {
@@ -24,7 +24,7 @@
     "slug": "refrigeration-gensets",
     "name": "Refrigeration Units & Gensets",
     "blurb": "Thermo King and Carrier refrigeration units and undermount gensets.",
-    "count": 67,
+    "count": 66,
     "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/Carrier-Clip-On-Generator-Set-0-1.jpg"
   },
   {
@@ -38,21 +38,21 @@
     "slug": "tanks",
     "name": "Tanks",
     "blurb": "Propane and NH3 storage tanks.",
-    "count": 36,
+    "count": 35,
     "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/1000-Gallon-Underground-Propane-Tank-for-sale.jpg"
   },
   {
     "slug": "trailers-chassis",
     "name": "Trailers & Chassis",
     "blurb": "LPG transport trailers, refrigerated trailers, and container chassis.",
-    "count": 21,
+    "count": 20,
     "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/Buy-Polar-11600-Gallon-Propane-Tank-1.jpg"
   },
   {
     "slug": "accessories-parts",
     "name": "Accessories & Parts",
     "blurb": "Parts and accessories for containers and equipment.",
-    "count": 30,
+    "count": 29,
     "heroImage": "https://conexdepotshipping.com/wp-content/uploads/2025/06/Buy-transformer-230v-460v-2.png"
   }
 ]
