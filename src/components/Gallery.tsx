@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 
 export default function Gallery({
   images,
@@ -23,7 +23,7 @@ export default function Gallery({
   return (
     <div>
       <div className="relative aspect-4/3 overflow-hidden bg-bg-raised-2 border border-border-soft">
-        <Image
+        <SafeImage
           key={active}
           src={images[active]}
           alt={title}
@@ -49,7 +49,7 @@ export default function Gallery({
               }`}
               aria-label={`View image ${i + 1}`}
             >
-              <Image src={src} alt="" fill sizes="10vw" className="object-cover" />
+              <SafeImage src={src} alt="" fill sizes="10vw" className="object-cover" />
             </button>
           ))}
         </div>

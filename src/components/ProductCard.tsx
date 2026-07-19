@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import SafeImage from "@/components/SafeImage";
 import { formatPrice, type Product } from "@/lib/catalog";
 import AddToCartButton from "@/components/AddToCartButton";
 import ReserveNowButton from "@/components/ReserveNowButton";
@@ -35,7 +35,7 @@ export default function ProductCard({
 
       <div className="relative aspect-4/3 overflow-hidden bg-bg-raised-2">
         {image ? (
-          <Image
+          <SafeImage
             src={image}
             alt={product.title}
             fill

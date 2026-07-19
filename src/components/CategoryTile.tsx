@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { Group } from "@/lib/catalog";
+import SafeImage from "@/components/SafeImage";
 
 export default function CategoryTile({
   group,
@@ -20,7 +20,7 @@ export default function CategoryTile({
       style={{ animationDelay: `${index * 70}ms` }}
     >
       {group.heroImage ? (
-        <Image
+        <SafeImage
           src={group.heroImage}
           alt={group.name}
           fill

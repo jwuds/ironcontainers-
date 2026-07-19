@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "catalog:build": "node scraper/scripts/build-catalog.js && node scraper/scripts/download-images.js"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.18",
