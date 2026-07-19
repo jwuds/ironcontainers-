@@ -1,31 +1,32 @@
 # SEO Health Audit — containeronedepot.com
 Audited live: 2026-07-19
+Last updated: 2026-07-19 (post Phase 1)
 
 ## Executive Summary
 
 **SEO Health Score: 60/100** (7 of 8 on-site categories scored; Performance still running, will shift this number once in. SXO and Backlinks are shown separately as diagnostic context, not folded into this score.)
 
-**Business type:** E-commerce — industrial equipment reseller (shipping containers, refrigeration units, tanks, generators, trailers/chassis), ~212 SKUs across 8 categories, competing against established resellers the catalog was originally sourced from.
+**Business type:** E-commerce — industrial equipment reseller (shipping containers, refrigeration units, tanks, generators, trailers/chassis), 208 SKUs across 8 categories (212 at audit time, 4 confirmed duplicates removed since — see Phase 1 below), competing against established resellers the catalog was originally sourced from.
 
-This audit doubled as a live incident response: three specialists independently converged on the same three critical bugs from different angles (visual, schema, e-commerce, content), all of which were root-caused and fixed during the audit itself — see "Fixed during this audit" below. The remaining findings are genuine, open work.
+This audit doubled as a live incident response: three specialists independently converged on the same three critical bugs from different angles (visual, schema, e-commerce, content), all of which were root-caused and fixed during the audit itself — see "Fixed during this audit" below. Phase 1 of the resulting action plan is now also complete — see "Phase 1 — complete" below. The remaining findings are genuine, open work.
 
 ### Top 5 findings
 1. Three critical, sitewide bugs — broken product images (Vercel quota), broken JSON-LD image URLs, and crawler-invisible descriptions — were found and fixed live during this audit.
-2. Product photos are hotlinked from third-party domains, not self-hosted — flagged independently by three specialists as a reliability, trust, and duplicate-content risk.
+2. Product photos are hotlinked from third-party domains, not self-hosted — flagged independently by three specialists as a reliability, trust, and duplicate-content risk. (Still open — see Phase 2.)
 3. A near-identical, much more established competitor ("Container One" — containerone.net, 30+ years, BBB-accredited) already ranks page-1 for shared target queries — a brand-collision problem no on-site fix solves alone.
-4. Zero FAQ content or FAQPage schema anywhere — the single highest-leverage gap for AI Overview/ChatGPT citation.
-5. About/Contact pages and the blog carry very thin trust signal (no address, no bylines, no credentials) for a high-ticket B2B/B2C seller.
+4. Zero FAQ content or FAQPage schema anywhere — the single highest-leverage gap for AI Overview/ChatGPT citation. (Phase 2.)
+5. About/Contact pages and the blog carry very thin trust signal (no address, no bylines, no credentials) for a high-ticket B2B/B2C seller. (Phase 2.)
 
-### Top 5 quick wins
-1. Publish `/llms.txt` (~1-2 hrs)
-2. Add security headers via `next.config.ts` `headers()` — none exist today
-3. Populate sitemap `<lastmod>` sitewide (4 of 229 URLs have it)
-4. Merge the near-duplicate `10ft-refrigerated-container-10ft-freezer` / `...-containers-10ft-freezer` listings
-5. Add a 3-5 item FAQ block + FAQPage schema per product template
+### Top 5 quick wins — status
+1. ~~Publish `/llms.txt`~~ — not yet done, Phase 2
+2. ✅ Add security headers via `next.config.ts` `headers()` — **done**
+3. ~~Populate sitemap `<lastmod>` sitewide~~ — not yet done, Phase 2
+4. ✅ Merge the near-duplicate `10ft-refrigerated-container-10ft-freezer` pair — **done**, plus 3 more confirmed duplicates found and removed
+5. ~~Add a 3-5 item FAQ block + FAQPage schema~~ — not yet done, Phase 2
 
 ---
 
-## Fixed during this audit
+## Fixed during this audit (initial pass)
 
 | Fix | Affected |
 |---|---|
@@ -38,16 +39,25 @@ This audit doubled as a live incident response: three specialists independently 
 | Removed `sourceUrl`/`siteName` from the compiled public `products.json` | Was exposing literal competitor page URLs for all 212 products in this public GitHub repo |
 | Untracked raw scrape output, scraper config, and the rewrite brief from the public repo | Named the specific competitor sites this catalog was sourced from |
 
+## Phase 1 — complete
+
+| Fix | Detail |
+|---|---|
+| Deleted 4 confirmed duplicate listings | 10ft reefer pair, 30,000-gal skid tank pair, Carrier clip-on genset pair, 20ft flat-rack pair — all verified by identical price + specs before merging. Catalog: 212 → 208. 301s added for the dropped slugs. |
+| Added baseline security headers | X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy. Full CSP deferred — needs per-request nonce middleware, a separate carefully-tested change. |
+| **Not done — availability schema** | Needs a real stock/inventory data source to fix honestly; this catalog has none (one-time scrape, not a live feed). Not fabricating a stock value just to close the item. |
+| **Left open — 3 pricing-conflict pairs** | 2 Thermo King genset pairs + 1 open-top pair have meaningfully different prices between near-identical listings. Could be genuinely different units or bad source data — needs your call, not a guess on live pricing. |
+
 ---
 
 ## Category Scores
 
 | Category | Score | Note |
 |---|---|---|
-| Technical SEO | 78/100 | Solid fundamentals; no security headers, category pages uncached |
+| Technical SEO | 78/100 | Measured pre-Phase-1; security headers finding is now resolved |
 | Sitemap | 88/100 | Structurally clean; missing `lastmod` on 225/229 URLs |
 | Content Quality & E-E-A-T | 52/100 | Good copy, was crawler-invisible (fixed); thin trust layer |
-| Schema / Structured Data | 62/100 | Architecturally correct; image bug fixed, availability still hardcoded |
+| Schema / Structured Data | 62/100 | Architecturally correct; image bug fixed, availability still hardcoded (no data source to fix it properly) |
 | Performance (CWV) | pending | Audit still running |
 | Visual / Mobile UX | 42/100* | *Pre-fix score — both Critical findings (images) now resolved |
 | AI Search Readiness (GEO) | 58/100 | Strong SSR foundation; no FAQ, no llms.txt |

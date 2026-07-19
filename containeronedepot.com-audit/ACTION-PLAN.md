@@ -9,10 +9,11 @@
 - [x] Removed competitor-URL data (sourceUrl/siteName) from the public catalog
 - [x] Untracked raw scrape output/config/brief from the public repo
 
-## Phase 1: Critical Fixes (this week)
-- [ ] Merge the near-duplicate `10ft-refrigerated-container-10ft-freezer` / `10ft-refrigerated-containers-10ft-freezer` listings (301 the loser); audit the other 5 flagged near-duplicate pairs from the earlier content-overrides review (30,000-gal skid tank trio, two clip-on genset pairs, flat-rack pair, open-top pair)
-- [ ] Add security headers (`headers()` in `next.config.ts`): CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy
-- [ ] Add a stock/availability field to the catalog pipeline so JSON-LD `availability` isn't hardcoded `InStock`
+## Phase 1: Critical Fixes (this week) — COMPLETE
+- [x] Audited all 6 flagged near-duplicate pairs by comparing price/specs. Deleted 4 confirmed duplicates (identical price + specs): 10ft reefer pair, 30,000-gal skid tank pair, Carrier clip-on genset pair, 20ft flat-rack pair. 301s added for the dropped slugs. Catalog: 212 → 208.
+- [x] Added security headers (`headers()` in `next.config.ts`): X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy. (Full CSP deferred — needs nonce middleware, a separate change.)
+- [ ] **Not done, on purpose:** stock/availability field for JSON-LD. No real inventory data source exists to back it — fabricating one was rejected rather than done just to close the item.
+- [ ] **Needs your call, not mine:** 3 remaining pricing-conflict pairs (2 Thermo King genset pairs, 1 open-top pair) — prices differ meaningfully enough that merging risks showing wrong pricing. Also a 3rd 30,000-gal tank listing priced differently enough it may be genuinely distinct inventory.
 
 ## Phase 2: High-Impact Improvements (weeks 2-3)
 - [ ] Publish `/llms.txt`
