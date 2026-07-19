@@ -35,6 +35,26 @@ const nextConfig: NextConfig = {
       permanent: true,
     }));
   },
+  // Baseline security headers only — no CSP yet. A real CSP needs a
+  // nonce issued per-request via middleware so it can allow Next's own
+  // hydration scripts without "unsafe-inline"; that's a separate, more
+  // carefully-tested change, not something to bolt on here.
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
