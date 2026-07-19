@@ -10,6 +10,7 @@ import {
   getRelatedProducts,
 } from "@/lib/catalog";
 import { getRelevantPosts } from "@/lib/blog";
+import { getProductFaqs } from "@/lib/faq";
 import Gallery from "@/components/Gallery";
 import SpecTable from "@/components/SpecTable";
 import ExpandableText from "@/components/ExpandableText";
@@ -58,6 +59,7 @@ export default async function ProductPage({
   const isOffshore = product.groups.includes("offshore-certified");
   const related = getRelatedProducts(product, 4);
   const guides = getRelevantPosts(product.groups);
+  const faqs = getProductFaqs(product);
   const numericPrice = Number(product.salePrice || product.regularPrice);
   const cartPrice = Number.isFinite(numericPrice) && numericPrice > 0 ? numericPrice : null;
   const canonicalUrl = `${SITE.url}/product/${product.slug}`;
@@ -115,10 +117,21 @@ export default async function ProductPage({
     ],
   };
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14">
       <JsonLd data={productJsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={faqJsonLd} />
       <nav className="font-mono text-xs text-text-faint mb-6 flex items-center gap-1.5 flex-wrap">
         <Link href="/" className="hover:text-accent transition-colors">
           Home
@@ -214,6 +227,24 @@ export default async function ProductPage({
             Full Description
           </h2>
           <ExpandableText text={product.description} />
+        </div>
+      )}
+
+      {faqs.length > 0 && (
+        <div className="mt-14 max-w-3xl">
+          <h2 className="font-display text-2xl tracking-wide mb-4">
+            Common Questions
+          </h2>
+          <div className="flex flex-col gap-5">
+            {faqs.map((f) => (
+              <div key={f.question}>
+                <h3 className="font-medium text-sm">{f.question}</h3>
+                <p className="mt-1 text-sm text-text-muted leading-relaxed">
+                  {f.answer}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
