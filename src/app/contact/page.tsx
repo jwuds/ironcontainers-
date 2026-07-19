@@ -28,6 +28,10 @@ export default function ContactPage() {
         Get in touch
       </h1>
       <ul className="mt-5 space-y-2 text-sm text-text-muted">
+        <li>
+          {SITE.address.street}, {SITE.address.city}, {SITE.address.state}{" "}
+          {SITE.address.zip}
+        </li>
         <li>{SITE.hours}</li>
         <li>
           <a href={`tel:${SITE.phone}`} className="hover:text-accent transition-colors">
@@ -42,6 +46,15 @@ export default function ContactPage() {
             {SITE.email}
           </a>
         </li>
+      </ul>
+
+      <ul className="mt-8 grid gap-2 sm:grid-cols-2 text-sm text-text-muted">
+        <li>&middot; Clear condition grading on every listing</li>
+        <li>&middot; Nationwide delivery, coordinated to your site</li>
+        <li>&middot; Transparent, quote-locked pricing</li>
+        <li>&middot; Commercial and residential orders</li>
+        <li>&middot; Support before and after your purchase</li>
+        <li>&middot; Refundable deposit, no pressure to commit</li>
       </ul>
 
       {submitted ? (

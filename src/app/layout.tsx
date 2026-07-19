@@ -64,6 +64,14 @@ const organizationJsonLd = {
   name: SITE.name,
   url: SITE.url,
   logo: `${SITE.url}/logo-mark-256.png`,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: SITE.address.street,
+    addressLocality: SITE.address.city,
+    addressRegion: SITE.address.state,
+    postalCode: SITE.address.zip,
+    addressCountry: SITE.address.country,
+  },
   contactPoint: [
     {
       "@type": "ContactPoint",
