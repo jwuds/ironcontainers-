@@ -78,3 +78,26 @@ export function getAllPosts(): BlogPost[] {
 export function getPostBySlug(slug: string): BlogPost | undefined {
   return posts.find((p) => p.slug === slug);
 }
+
+// Category group -> guide slugs worth surfacing on that group's product
+// pages, beyond the two universal posts (buying process, financing) every
+// product links to regardless of category.
+const GROUP_SPECIFIC_POSTS: Record<string, string[]> = {
+  "shipping-containers": ["container-grades-explained"],
+  "offshore-certified": ["container-grades-explained"],
+  "refrigerated-containers": ["reefer-container-buying-guide"],
+  "refrigeration-gensets": ["reefer-container-buying-guide"],
+};
+
+const UNIVERSAL_POST_SLUGS = [
+  "how-our-reservation-process-works",
+  "section-179-equipment-deduction",
+];
+
+export function getRelevantPosts(groups: string[]): BlogPost[] {
+  const slugs = new Set<string>(UNIVERSAL_POST_SLUGS);
+  for (const g of groups) {
+    for (const slug of GROUP_SPECIFIC_POSTS[g] ?? []) slugs.add(slug);
+  }
+  return posts.filter((p) => slugs.has(p.slug));
+}

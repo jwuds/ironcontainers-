@@ -9,6 +9,7 @@ import {
   getProductBySlug,
   getRelatedProducts,
 } from "@/lib/catalog";
+import { getRelevantPosts } from "@/lib/blog";
 import Gallery from "@/components/Gallery";
 import SpecTable from "@/components/SpecTable";
 import ExpandableText from "@/components/ExpandableText";
@@ -56,6 +57,7 @@ export default async function ProductPage({
   const primaryGroup = product.groups[0] ? getGroupBySlug(product.groups[0]) : undefined;
   const isOffshore = product.groups.includes("offshore-certified");
   const related = getRelatedProducts(product, 4);
+  const guides = getRelevantPosts(product.groups);
   const numericPrice = Number(product.salePrice || product.regularPrice);
   const cartPrice = Number.isFinite(numericPrice) && numericPrice > 0 ? numericPrice : null;
   const canonicalUrl = `${SITE.url}/product/${product.slug}`;
@@ -212,6 +214,26 @@ export default async function ProductPage({
             Full Description
           </h2>
           <ExpandableText text={product.description} />
+        </div>
+      )}
+
+      {guides.length > 0 && (
+        <div className="mt-10 max-w-3xl">
+          <h2 className="font-mono text-xs uppercase tracking-widest text-text-faint mb-3">
+            Related Guides
+          </h2>
+          <ul className="flex flex-col gap-2">
+            {guides.map((post) => (
+              <li key={post.slug}>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="text-sm text-accent hover:text-accent-hover transition-colors underline underline-offset-2"
+                >
+                  {post.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
