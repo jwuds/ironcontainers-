@@ -14,8 +14,6 @@ export type Product = {
   images: string[];
   rawCategories: string[];
   groups: string[];
-  sourceUrl: string;
-  siteName: string;
 };
 
 export type Group = {

@@ -1,1 +1,17 @@
 node_modules/
+
+# Raw scrape captures, source-site configs, and process docs that name
+# the third-party sites this catalog was originally sourced from. Kept
+# locally for rebuilding scraper/content-overrides.json (which IS
+# tracked — it's the actual first-party rewritten copy), never published.
+output/
+config.json
+README.md
+description-rewrite-brief.md
+full-source.json
+full-source-deduped.json
+sample-desc.txt
+source_by_group/
+scratch-batches/
+scripts/extract-facts.py
+scripts/extract-full-source.py

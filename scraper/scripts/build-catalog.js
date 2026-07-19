@@ -239,16 +239,25 @@ function loadSources() {
   return scraped;
 }
 
-// conexdepot (www.conexdepot.com, as opposed to conexdepotshipping.com) never
-// exposes a static price on its product pages, so every listing scraped from
-// it has no regularPrice — 27 incomplete shipping-container stubs with no
-// pricing signal at all. Drop them rather than show blank/quote-only cards.
-function isIncompleteConexdepotListing(p) {
+// One source site never exposes a static price on its product pages, so
+// every listing scraped from it has no regularPrice — 27 incomplete
+// shipping-container stubs with no pricing signal at all. Drop them
+// rather than show blank/quote-only cards. (Source identity lives in
+// scraper/config.json, which is intentionally not committed.)
+function isIncompleteSourceListing(p) {
   return p.siteName === 'conexdepot' && !p.regularPrice;
 }
 
+// Some source listings have a warehouse-location tag ("Graham_TX",
+// "Atlanta_GA") sitting in the scraped sku field instead of a real SKU —
+// a source-side data-entry mixup, not a product code. Never show it as if
+// it were a SKU.
+function isLocationCodeNotSku(sku) {
+  return /^[A-Za-z]+_[A-Z]{2}$/.test(sku);
+}
+
 function main() {
-  const scraped = loadSources().filter((p) => !isIncompleteConexdepotListing(p));
+  const scraped = loadSources().filter((p) => !isIncompleteSourceListing(p));
   const raw = dedupeByTitle(scraped);
   const droppedDupes = scraped.length - raw.length;
 
@@ -273,7 +282,7 @@ function main() {
     return {
       slug,
       title,
-      sku: p.sku && p.sku !== 'N/A' ? p.sku : null,
+      sku: p.sku && p.sku !== 'N/A' && !isLocationCodeNotSku(p.sku) ? p.sku : null,
       type: p.type,
       regularPrice: p.regularPrice || null,
       salePrice: p.salePrice || null,
@@ -283,8 +292,6 @@ function main() {
       images: p.images || [],
       rawCategories: p.categories || [],
       groups: mapGroups(p.categories || []),
-      sourceUrl: p.url,
-      siteName: p.siteName,
     };
   });
 
