@@ -70,7 +70,9 @@ export default async function ProductPage({
     "@type": "Product",
     name: product.title,
     description: cleanDescription,
-    image: product.images.map((img) => `${SITE.url}${img}`),
+    image: product.images.map((img) =>
+      img.startsWith("http") ? img : `${SITE.url}${img}`
+    ),
     sku: product.sku || undefined,
     url: canonicalUrl,
     brand: { "@type": "Organization", name: SITE.name },
