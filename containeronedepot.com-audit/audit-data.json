@@ -1,0 +1,186 @@
+{
+  "summary": {
+    "health_score": 60,
+    "health_score_note": "Weighted average of 7 scored on-site categories (Technical, Content, Schema, Sitemap, Visual/UX, GEO, E-commerce). Performance audit still running at report time — excluded, will shift the score once in. SXO (34) and Backlinks (8) are shown separately as diagnostic/off-page context, not folded into this number.",
+    "business_type": "E-commerce — industrial equipment reseller (shipping containers, refrigeration units, tanks, generators, trailers/chassis), direct-to-buyer, ~212 SKUs across 8 categories",
+    "audit_date": "2026-07-19",
+    "top_findings": [
+      "Three separate critical bugs all traced back to the same root causes and were fixed live during this audit: (1) Vercel image-optimizer 402 broke every product photo site-wide, (2) a JSON-LD image-URL concatenation bug broke Product schema images on all 212 products, (3) ExpandableText truncated descriptions to 480 chars server-side, hiding ~67% of every rewritten description from crawlers.",
+      "Product photos are hotlinked directly from third-party domains (conexdepotshipping.com, cdn.shopify.com) rather than self-hosted — flagged independently by three specialists (visual, e-commerce, SXO) as a reliability, trust, and duplicate-content risk.",
+      "A near-identical competitor brand, \"Container One\" (containerone.net — 30+ years, BBB-accredited, 300+ locations), already ranks page-1 for shared target queries. This is a brand-collision risk independent of any on-site fix.",
+      "No FAQ content or FAQPage schema anywhere on the site — the single highest-leverage gap for AI Overview/ChatGPT citation (GEO score 58/100).",
+      "About/Contact pages and the 4-post blog carry very thin E-E-A-T trust signal for a high-ticket industrial equipment seller (no address, no bylines, no credentials)."
+    ],
+    "quick_wins": [
+      "Publish /llms.txt (1-2 hrs)",
+      "Add security headers (CSP, X-Frame-Options, etc.) via next.config.ts headers() — none exist today",
+      "Populate sitemap <lastmod> sitewide (currently only 4 of 229 URLs have it)",
+      "Merge the near-duplicate 10ft-refrigerated-container-10ft-freezer / 10ft-refrigerated-containers-10ft-freezer SKUs (one 301)",
+      "Add a 3-5 item FAQ block + FAQPage schema per product template"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "score": 78,
+      "what_works": [
+        "Clean robots.txt, correct canonicals, HSTS sitewide, no mixed content",
+        "Full SSR/prerendering — no JS dependency for core content or JSON-LD",
+        "Clean hyphenated URL structure, working legacy-slug redirects",
+        "Sitemap: 229 URLs, zero duplicates, all spot-checked URLs return 200"
+      ],
+      "findings": [
+        {"title": "No security headers beyond HSTS", "severity": "High", "description": "No CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, or Permissions-Policy on any page. next.config.ts has no headers() block.", "recommendation": "Add a headers() block in next.config.ts with baseline security headers scoped to the Vercel/Shopify hosts in use."},
+        {"title": "Category hub pages are fully dynamic, uncached", "severity": "Medium", "description": "Unlike home/product pages (prerendered, edge-cached), the 8 category pages serve Cache-Control: private, no-store with no X-Nextjs-Prerender header — rendered fresh every request. These are the highest link-equity internal hubs.", "recommendation": "Convert to static generation with ISR (revalidate) or find and remove the dynamic data source forcing per-request rendering."},
+        {"title": "Sitemap lastmod present on only 4 of 229 URLs", "severity": "Medium", "description": "Only the 4 blog posts carry lastmod; every product/category/static page is missing it, limiting crawl-budget prioritization for a young domain.", "recommendation": "Populate lastmod from real content-modified timestamps sitewide, not a blanket 'now' stamp."},
+        {"title": "Two-hop redirect for bare-HTTP apex", "severity": "Low", "description": "http://containeronedepot.com takes 2 redirect hops to reach the canonical https://www. host.", "recommendation": "Collapse to a single redirect at the DNS/edge layer."},
+        {"title": "No IndexNow integration", "severity": "Low", "description": "No IndexNow key file found; relying solely on pull-based crawling.", "recommendation": "Add an IndexNow key and push new/changed product URLs on publish."}
+      ]
+    },
+    {
+      "name": "Sitemap",
+      "score": 88,
+      "what_works": [
+        "Valid flat urlset, 229 URLs, exact expected count (212 products + 8 categories + 5 static/blog-index + 4 blog posts)",
+        "No duplicates, /cart and /search correctly excluded, referenced correctly in robots.txt",
+        "Spot-checked 18 URLs across every page type — all 200"
+      ],
+      "findings": [
+        {"title": "lastmod missing on 225/229 URLs", "severity": "Medium", "description": "Only the 4 blog posts have real lastmod dates.", "recommendation": "Extend real-date lastmod logic to products/categories/static pages."},
+        {"title": "priority/changefreq present but ignored by Google", "severity": "Info", "description": "Harmless but safe to strip for a smaller file.", "recommendation": "Optional cleanup."}
+      ]
+    },
+    {
+      "name": "Content Quality & E-E-A-T",
+      "score": 52,
+      "what_works": [
+        "Rewritten product descriptions are specific, technical, and accurate — reads like it was written by someone who sells this equipment",
+        "Blog posts are practical and non-fluffy (properly hedges tax advice, gives real deposit figures)",
+        "No factual errors spotted in the sample"
+      ],
+      "findings": [
+        {"title": "Rewritten descriptions were ~65% invisible to crawlers", "severity": "Critical", "description": "ExpandableText sliced text to 480 chars before render; the rest only existed in the client hydration payload. FIXED during this audit — full text now always renders in the DOM with a CSS line-clamp for the visual toggle.", "recommendation": "Resolved — verify re-indexing picks up full description text.", "status": "fixed"},
+        {"title": "About/Contact pages carry almost no trust signal", "severity": "High", "description": "About is ~90 words (no history, credentials, address); Contact is ~60 words (no street address).", "recommendation": "Add a real About narrative and a verifiable physical address plus GBP link."},
+        {"title": "All 4 blog posts are 10-15% of the 1,500-word floor, no bylines", "severity": "High", "description": "150-190 words each, no author name/credential anywhere.", "recommendation": "Expand posts with concrete detail; add named, credentialed bylines."},
+        {"title": "Category pages have no unique topical copy", "severity": "Medium", "description": "Single tagline per category page, no differentiation.", "recommendation": "Add 150-300 word intros per category."},
+        {"title": "Repeated boilerplate CTA sentence across product bodies", "severity": "Medium", "description": "\"Contact our team to confirm current availability\" (or a close variant) closes many descriptions verbatim at scale.", "recommendation": "Vary or remove; the Quote/Reserve buttons already cover that action."}
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "score": 62,
+      "what_works": [
+        "Organization schema present site-wide with ContactPoint",
+        "BreadcrumbList correct on every product/category page",
+        "Product/Offer schema well-formed when triggered, all 212 products carry a numeric price"
+      ],
+      "findings": [
+        {"title": "Product JSON-LD image URLs were malformed on all 212 products", "severity": "Critical", "description": "SITE.url was unconditionally prepended to already-absolute image URLs. FIXED during this audit.", "recommendation": "Resolved.", "status": "fixed"},
+        {"title": "availability hardcoded to InStock regardless of real stock", "severity": "High", "description": "No stockStatus field drives this; a sold-out item would still declare InStock.", "recommendation": "Add a stock field to the catalog pipeline and map accordingly."},
+        {"title": "Offer block silently omitted if a no-price SKU appears", "severity": "Medium", "description": "Not currently triggered (all 212 have prices) but latent — a future no-price product loses Product rich-result eligibility entirely.", "recommendation": "Handle the no-price case explicitly before it occurs."},
+        {"title": "Organization schema missing sameAs", "severity": "Low", "description": "No linked social/profile URLs.", "recommendation": "Add once real business profiles exist."},
+        {"title": "CollectionPage has no ItemList", "severity": "Low", "description": "Category schema doesn't link to the products shown.", "recommendation": "Add mainEntity ItemList referencing product URLs."}
+      ]
+    },
+    {
+      "name": "Performance (Core Web Vitals)",
+      "score": null,
+      "what_works": [],
+      "findings": [],
+      "status": "pending — specialist audit still running at report time, will be appended"
+    },
+    {
+      "name": "Visual / Mobile UX",
+      "score": 42,
+      "score_note": "Measured before this audit's fixes shipped. The two Critical findings below (both image-related) are now resolved; remaining findings are still open.",
+      "what_works": [
+        "Strong above-the-fold hero and clear CTAs on desktop and mobile",
+        "Dark theme with orange accent reads clean and on-brand, no broken grid at either width",
+        "Mobile nav collapses correctly, no horizontal scroll anywhere tested",
+        "Confirmed the earlier-suspected header/hero overlap is not a real bug (screenshot-stitching artifact only)"
+      ],
+      "findings": [
+        {"title": "Every product image broken (Vercel 402)", "severity": "Critical", "description": "Image optimizer returned 402 Payment Required for every remote image. FIXED during this audit (images.unoptimized).", "recommendation": "Resolved — verify visually post-deploy.", "status": "fixed"},
+        {"title": "Product gallery unusable as a direct consequence", "severity": "Critical", "description": "Same root cause as above.", "recommendation": "Resolved.", "status": "fixed"},
+        {"title": "\"Add to Cart\" tap target undersized on mobile category cards", "severity": "High", "description": "Measured 147x29px, under the 48px minimum touch-target guidance.", "recommendation": "Increase min-height to 44-48px on mobile."},
+        {"title": "\"Request a Quote\" button sits exactly at minimum tap-target size", "severity": "Medium", "description": "48px on mobile, no comfortable margin next to an adjacent 50px button.", "recommendation": "Bump both to ~52-56px with more gap."},
+        {"title": "Category filter chips push inventory ~1.5 screens down on mobile", "severity": "Low", "description": "13 stacked filter chips before the first product card.", "recommendation": "Collapse into an expandable filter drawer on mobile."},
+        {"title": "Location formatting artifact (\"Graham_TX\")", "severity": "Low", "description": "Traced to a bogus warehouse-location code sitting in the sku field on 44 products, not a location field. FIXED during this audit (nulled at the build step).", "recommendation": "Resolved.", "status": "fixed"}
+      ]
+    },
+    {
+      "name": "AI Search Readiness (GEO)",
+      "score": 58,
+      "what_works": [
+        "robots.txt fully permits all major AI crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended)",
+        "Full SSR — raw curl returns complete product copy and JSON-LD, no headless rendering needed",
+        "Rewritten descriptions lead with concrete, source-near-subject facts in declarative sentences",
+        "Spec sections use semantic dl/dt/dd markup, easy for extraction pipelines"
+      ],
+      "findings": [
+        {"title": "llms.txt missing (404)", "severity": "High", "description": "No machine-readable index of key pages for LLM crawlers.", "recommendation": "Publish /llms.txt listing top category/product URLs and policy summaries. ~1-2 hrs."},
+        {"title": "No FAQ content or FAQPage schema anywhere", "severity": "High", "description": "Zero question-form headings site-wide — the single most-cited content shape for AI Overviews/ChatGPT direct answers.", "recommendation": "Add a 3-5 item FAQ block per product template with FAQPage JSON-LD."},
+        {"title": "Long undifferentiated paragraphs reduce single-passage citability", "severity": "Medium", "description": "Multi-fact paragraphs increase paraphrase/misattribution risk vs. one self-contained passage per fact.", "recommendation": "Restructure into short, single-topic sub-paragraphs or bolded mini-headers."},
+        {"title": "No comparison tables across similar SKUs", "severity": "Medium", "description": "212 products, no visible size/model comparison tables despite being a natural fit for long-tail buying queries.", "recommendation": "Add a small comparison table per product family."},
+        {"title": "Weak off-site entity/brand signals", "severity": "Medium", "description": "No Wikipedia/Reddit/YouTube presence found; Organization schema has no sameAs.", "recommendation": "Add sameAs links once real profiles exist; longer-term content plays."},
+        {"title": "No last-verified date on spec data", "severity": "Low", "description": "No freshness signal for currency-sensitive specs (e.g. emissions compliance).", "recommendation": "Add a small 'specs verified as of' line."}
+      ]
+    },
+    {
+      "name": "E-commerce / Product Data",
+      "score": 46,
+      "score_note": "The Critical finding below is the same JSON-LD image bug already fixed under Schema — resolved.",
+      "what_works": [
+        "Full SSG — all 212 products and 8 categories in raw HTML",
+        "Product/Organization/Breadcrumb JSON-LD with a populated Offer on all 212 products",
+        "Grade/type sub-filtering (?sub=) is server-rendered and canonicalizes correctly, avoiding facet duplicate-content bloat",
+        "Some condition/grade variants get distinct keyword-rich slugs (good long-tail pattern)"
+      ],
+      "findings": [
+        {"title": "Product schema image URLs broken", "severity": "Critical", "description": "Same bug as the Schema category finding.", "recommendation": "Resolved.", "status": "fixed"},
+        {"title": "No self-hosted product images", "severity": "High", "description": "All images hotlink conexdepotshipping.com / cdn.shopify.com — dependency risk, blocks WebP/AVIF control, undermines Merchant Center origin-trust.", "recommendation": "Mirror to owned storage/CDN with unique filenames (user has confirmed rights to the source imagery; self-hosting is the reliability/SEO fix regardless)."},
+        {"title": "No GTIN/MPN/SKU in Product schema", "severity": "High", "description": "sku is null for most products; no gtin/mpn/identifier_exists emitted — blocks Merchant Center feed acceptance.", "recommendation": "Populate real internal SKUs or emit identifier_exists: false."},
+        {"title": "New/Used condition variants collapsed into one page/price", "severity": "High", "description": "94 of 212 products are type: variable with condition flattened into a text spec instead of distinct crawlable variants, inconsistent with how grade variants are handled elsewhere in the same catalog.", "recommendation": "Standardize on distinct slugs/Offers per condition-grade combination."},
+        {"title": "No combined facet filtering on category pages", "severity": "Medium", "description": "Only pre-built sub= grouping links, no cross-filter by size+condition+grade.", "recommendation": "UX/conversion improvement, not a crawlability issue."}
+      ]
+    }
+  ],
+  "diagnostic_not_scored": [
+    {
+      "name": "Search Experience (SXO) — why aren't we ranking",
+      "score": 34,
+      "note": "Not folded into the Health Score — this is a ranking-cause diagnostic, not a site-health metric.",
+      "key_findings": [
+        "Critical: product copy is structurally similar to the scraped source network (conexoffcoast.com, longbeachoffcoastdepot.com, etc.) already occupying these SERPs with the same template pattern.",
+        "Critical: product images are hotlinked from conexdepotshipping.com — reinforces the duplicate-content signal and undermines originality trust.",
+        "High: 10ft-refrigerated-container-10ft-freezer and 10ft-refrigerated-containers-10ft-freezer cannibalize the same query — merge needed.",
+        "High: no cross-link between genset/reefer PDPs and the existing buying-guide blog content that would serve the researching buyer.",
+        "Medium: brand-name collision with containerone.net, an established BBB-accredited competitor with a near-identical name already ranking on shared target queries."
+      ]
+    },
+    {
+      "name": "Backlinks / Off-Page Authority",
+      "score": 8,
+      "note": "Expected and not a fixable defect for a ~2-week-old rebrand — shown for context, not folded into the Health Score.",
+      "key_findings": [
+        "Zero Common Crawl or Wayback captures at any date — no discoverable link/crawl footprint yet.",
+        "Realistic near-term tier: industry/equipment directories + genuine OEM dealer citations (Carrier/Thermo King/CAT/Kubota already referenced extensively in catalog data).",
+        "Do not attempt head-to-head link competition against 10+ year incumbents yet; re-baseline in 60-90 days."
+      ]
+    }
+  ],
+  "fixes_applied_during_audit": [
+    "next.config.ts: added images.remotePatterns for cdn.shopify.com/conexdepotshipping.com (was causing 500s on every page using next/image)",
+    "next.config.ts: added images.unoptimized to bypass Vercel's image optimizer, which was returning 402 Payment Required for every remote product photo",
+    "src/app/product/[slug]/page.tsx: fixed Product JSON-LD image URL concatenation bug affecting all 212 products",
+    "src/components/ExpandableText.tsx: full description text now always server-rendered; visual truncation moved to CSS line-clamp so crawlers see complete copy",
+    "src/app/product/[slug]/page.tsx: removed the rawCategories chip row (raw scraped marketplace taxonomy strings shown as tags)",
+    "scraper/scripts/build-catalog.js: cleared 44 products' bogus sku values (warehouse-location codes like \"Graham_TX\" mistakenly scraped as SKU)",
+    "scraper/scripts/build-catalog.js + src/lib/catalog.ts: removed sourceUrl/siteName fields from the compiled, public products.json (unused by the app, but exposed literal competitor page URLs for all 212 products in this public repo)",
+    "Untracked scraper/output, config.json, README.md, description-rewrite-brief.md from the public repo (named source sites/competitors); kept locally, added to .gitignore"
+  ],
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/"
+  }
+}
