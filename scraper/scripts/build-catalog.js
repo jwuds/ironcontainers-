@@ -270,6 +270,36 @@ const KNOWN_DUPLICATE_TITLES = new Set([
   '20ft Flat Rack Shipping Containers 20ft', // dup of "20ft Flat Rack Container 20ft"
 ]);
 
+// Display-title corrections, keyed by the slug they apply to (slugs are
+// derived from the ORIGINAL cleaned title before this map runs, so fixing
+// a title here never changes its URL). These specific 21 titles repeat a
+// word awkwardly (e.g. "10ft Refrigerated Container 10ft Freezer") — bad
+// for SERP snippet readability and CTR. Rewritten to say the same thing
+// once, keeping every distinguishing detail (size, cert, condition, SKU).
+const TITLE_FIXES = {
+  '10ft-refrigerated-container-10ft-freezer': '10ft Refrigerated Container / Freezer',
+  '1000-gallon-above-ground-propane-tanks-asme-new-tanks': '1000 Gallon Above Ground Propane Tank, ASME New',
+  '10ft-high-cube-shipping-container-high-cube-10ft': '10ft High Cube Shipping Container',
+  '10ft-shipping-container-standard-10ft': '10ft Standard Shipping Container',
+  '18000-gallon-skid-tanks-asme-storage-skids-tanks': '18,000 Gallon ASME Skid Tank',
+  '18000-gallon-skid-tanks-asme-storage-tanks-on-skids': '18,000 Gallon ASME Storage Tank on Skids',
+  '20ft-dnv-offshore-open-top-containers-dnv-2-7-1-certified-units': '20ft DNV 2.7-1 Certified Offshore Open Top Container',
+  '20ft-dnv-refrigerated-containers-certified-dnv-2-7-1-standard': '20ft DNV 2.7-1 Certified Refrigerated Container',
+  '20ft-double-door-shipping-containers-buy-standard-shipping-containers': '20ft Double Door Standard Shipping Container',
+  '20ft-flat-rack-container-20ft': '20ft Flat Rack Container',
+  '20ft-shipping-containers-quality-standard-shipping-containers': '20ft Standard Shipping Container',
+  '30000-gallon-propane-tanks-asme-storage-skids-tanks': '30,000 Gallon ASME Propane Skid Tank',
+  '30000-gallon-skid-tanks-asme-storage-skids-tanks': '30,000 Gallon ASME Storage Skid Tank',
+  '40ft-double-door-shipping-containers-buy-standard-shipping-containers': '40ft Double Door Standard Shipping Container',
+  '40ft-open-side-shipping-containers-standard-40ft-full-side-access-container': '40ft Open Side Shipping Container (Full Side Access)',
+  '500-gallon-above-ground-propane-tanks-new-certified-tanks': '500 Gallon Above Ground Propane Tank, New & Certified',
+  '500-gallon-propane-tanks-new-certified-tanks': '500 Gallon Propane Tank, New & Certified',
+  '500-gallon-underground-propane-tanks-new-certified-tanks': '500 Gallon Underground Propane Tank, New & Certified',
+  'thermo-king-sb-210-units-sb-210-units': 'Thermo King SB-210 & SB-210+ Units',
+  'used-1000-gallon-propane-tanks-used-asme-dot-tanks': 'Used 1000 Gallon Propane Tank, ASME & DOT',
+  'used-500-gallon-propane-tanks-scrap-tanks': 'Used 500 Gallon Propane Tank (Scrap/Salvage)',
+};
+
 function main() {
   const scraped = loadSources().filter((p) => !isIncompleteSourceListing(p));
   const deduped = dedupeByTitle(scraped);
@@ -296,7 +326,7 @@ function main() {
 
     return {
       slug,
-      title,
+      title: TITLE_FIXES[slug] || title,
       sku: p.sku && p.sku !== 'N/A' && !isLocationCodeNotSku(p.sku) ? p.sku : null,
       type: p.type,
       regularPrice: p.regularPrice || null,
