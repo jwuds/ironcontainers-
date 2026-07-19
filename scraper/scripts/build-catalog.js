@@ -322,6 +322,14 @@ function main() {
   fs.mkdirSync(OUT_DIR, { recursive: true });
   fs.writeFileSync(path.join(OUT_DIR, 'products.json'), JSON.stringify(products));
   fs.writeFileSync(path.join(OUT_DIR, 'groups.json'), JSON.stringify(groups, null, 2));
+  // Real (not fabricated) sitemap lastmod signal: the moment this catalog
+  // was actually regenerated, stable across requests until the next rebuild
+  // — not a live "now" stamped on every crawl, which trains Google to
+  // distrust the field.
+  fs.writeFileSync(
+    path.join(OUT_DIR, 'catalog-meta.json'),
+    JSON.stringify({ generatedAt: new Date().toISOString() }, null, 2)
+  );
 
   console.log(`Dropped ${droppedDupes} duplicate listings (${scraped.length} scraped -> ${products.length} unique)`);
   console.log(`Applied ${overrideCount}/${Object.keys(overrides).length} curated content overrides`);
