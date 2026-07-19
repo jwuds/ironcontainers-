@@ -8,6 +8,18 @@ const path = require('path');
 const OUTPUT_DIR = path.resolve(__dirname, '..', 'output');
 const SOURCES = ['products.json', 'containerone-products.json'];
 const OUT_DIR = path.resolve(__dirname, '..', '..', 'src', 'data');
+const OVERRIDES_PATH = path.resolve(__dirname, '..', 'content-overrides.json');
+
+// Hand-curated SEO copy, keyed by slug. Slugs are deterministic (derived
+// from the cleaned scraped title, sorted alphabetically) so this survives
+// re-running the scraper as long as source titles don't change. Only
+// shortDescription/description are overridable here — title and slug stay
+// scraper-derived so URLs never move. See scraper/content-overrides.json
+// and scraper/README.md for how to add/update entries.
+function loadOverrides() {
+  if (!fs.existsSync(OVERRIDES_PATH)) return {};
+  return JSON.parse(fs.readFileSync(OVERRIDES_PATH, 'utf8'));
+}
 
 // Raw scraped category name -> group slug. Anything not listed here falls
 // into "accessories-parts" as a catch-all, except the junk/one-off ones
@@ -244,6 +256,9 @@ function main() {
   // order) are stable and deterministic across rebuilds.
   raw.sort((a, b) => a.title.localeCompare(b.title));
 
+  const overrides = loadOverrides();
+  let overrideCount = 0;
+
   const slugCounts = new Map();
   const products = raw.map((p, idx) => {
     const title = cleanTitle(p.title);
@@ -252,6 +267,9 @@ function main() {
     slugCounts.set(base, count + 1);
     const slug = count === 0 ? base : `${base}-${count}`;
 
+    const override = overrides[slug];
+    if (override) overrideCount++;
+
     return {
       slug,
       title,
@@ -259,8 +277,8 @@ function main() {
       type: p.type,
       regularPrice: p.regularPrice || null,
       salePrice: p.salePrice || null,
-      shortDescription: p.shortDescription,
-      description: p.description,
+      shortDescription: override?.shortDescription ?? p.shortDescription,
+      description: override?.description ?? p.description,
       specs: Object.entries(p.specs || {}),
       images: p.images || [],
       rawCategories: p.categories || [],
@@ -284,6 +302,7 @@ function main() {
   fs.writeFileSync(path.join(OUT_DIR, 'groups.json'), JSON.stringify(groups, null, 2));
 
   console.log(`Dropped ${droppedDupes} duplicate listings (${scraped.length} scraped -> ${products.length} unique)`);
+  console.log(`Applied ${overrideCount}/${Object.keys(overrides).length} curated content overrides`);
   console.log(`Wrote ${products.length} products across ${groups.length} groups to ${OUT_DIR}`);
   for (const g of groups) console.log(`  ${g.name}: ${g.count}`);
 }
