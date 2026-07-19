@@ -142,19 +142,6 @@ export default async function ProductPage({
         <Gallery images={product.images} title={product.title} />
 
         <div>
-          {product.rawCategories.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mb-3">
-              {product.rawCategories.map((c) => (
-                <span
-                  key={c}
-                  className="font-mono text-[10px] uppercase tracking-wider text-text-faint border border-border-soft px-2 py-0.5"
-                >
-                  {c}
-                </span>
-              ))}
-            </div>
-          )}
-
           <h1 className="font-display text-4xl sm:text-5xl tracking-wide leading-[0.95]">
             {product.title}
           </h1>

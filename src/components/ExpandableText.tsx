@@ -5,12 +5,15 @@ import { useState } from "react";
 export default function ExpandableText({ text }: { text: string }) {
   const [expanded, setExpanded] = useState(false);
   const isLong = text.length > 480;
-  const shown = expanded || !isLong ? text : text.slice(0, 480).trimEnd() + "…";
 
   return (
     <div>
-      <p className="text-sm text-text-muted whitespace-pre-line leading-relaxed">
-        {shown}
+      <p
+        className={`text-sm text-text-muted whitespace-pre-line leading-relaxed ${
+          isLong && !expanded ? "line-clamp-6" : ""
+        }`}
+      >
+        {text}
       </p>
       {isLong && (
         <button
