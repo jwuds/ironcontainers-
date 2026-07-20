@@ -62,11 +62,12 @@ export const posts: BlogPost[] = [
     tag: "How It Works",
     body: [
       "We use a deposit-and-reserve model rather than an instant checkout, so every order gets a human confirmation step before delivery is arranged.",
-      "Step 1: Reserve. A refundable deposit ($100–$500, based on unit price) holds your unit and locks the quoted price for 48–72 hours.",
+      "Step 1: Reserve. A refundable deposit of $1,000 holds your unit and locks the quoted price for 48–72 hours.",
       "Step 2: We confirm. Our team verifies the unit is available and preps it for transport.",
       "Step 3: Delivery is arranged. Freight is scheduled to your site, coordinated around your timeline.",
       "Step 4: Delivered. Your unit arrives ready to use. Balance is due before delivery, not at reservation.",
       "If your order doesn't move forward after reserving, the deposit is fully refundable — there's no risk in locking in a price while you finalize details on your end.",
+      "Changed your mind after delivery? Returns are accepted within 7 days. Return shipping and any related costs are the customer's responsibility.",
     ],
   },
 ];

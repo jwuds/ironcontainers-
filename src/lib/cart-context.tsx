@@ -71,13 +71,9 @@ export function useCart() {
   return ctx;
 }
 
-// $100-$500 refundable deposit range, tiered by unit price, per the
-// deposit & reservation spec. Units with no scraped price fall back to a
-// flat request-quote deposit rather than blocking the reservation flow.
-export function depositFor(price: number | null): number {
-  if (price == null) return 100;
-  if (price < 3000) return 100;
-  if (price < 10000) return 250;
-  if (price < 30000) return 400;
-  return 500;
+// Flat $1,000 deposit to reserve any unit, regardless of price.
+export const DEPOSIT_AMOUNT = 1000;
+
+export function depositFor(_price: number | null): number {
+  return DEPOSIT_AMOUNT;
 }

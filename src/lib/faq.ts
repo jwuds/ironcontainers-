@@ -19,13 +19,19 @@ export function getProductFaqs(product: Product): FaqItem[] {
   faqs.push({
     question: "How does the deposit and reservation process work?",
     answer:
-      "A refundable deposit ($100–$500, based on unit price) holds this unit and locks the quoted price for 48–72 hours while we confirm availability and arrange delivery. If your order doesn't move forward, the deposit is fully refunded.",
+      "A refundable deposit of $1,000 holds this unit and locks the quoted price for 48–72 hours while we confirm availability and arrange delivery. If your order doesn't move forward, the deposit is fully refunded.",
   });
 
   faqs.push({
     question: "Do you deliver, and does it cost extra?",
     answer:
       "Yes, we deliver nationwide. Delivery is coordinated after reservation and quoted based on your location and the unit's size, so it isn't included in the listed price.",
+  });
+
+  faqs.push({
+    question: "What's your return policy?",
+    answer:
+      "Returns are accepted within 7 days of delivery. Return shipping and any related costs are the customer's responsibility.",
   });
 
   faqs.push({

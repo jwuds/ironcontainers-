@@ -4,6 +4,10 @@ import Link from "next/link";
 import { useCart, depositFor } from "@/lib/cart-context";
 import { formatPrice } from "@/lib/catalog";
 
+function priceLabel(price: number | null) {
+  return formatPrice(price != null ? String(price) : null) ?? "Price on request";
+}
+
 export default function ReservePage() {
   const { items } = useCart();
   const totalDeposit = items.reduce((sum, i) => sum + depositFor(i.price), 0);
@@ -32,17 +36,21 @@ export default function ReservePage() {
         Reserve These Units
       </h1>
       <p className="mt-4 text-text-muted">
-        A refundable deposit reserves your unit{items.length > 1 ? "s" : ""} and locks
-        today&rsquo;s quoted price for 48&ndash;72 hours while delivery and paperwork
-        are finalized. Deposits are fully refundable if the order doesn&rsquo;t proceed.
+        A refundable deposit reserves your unit{items.length > 1 ? "s" : ""}{" "}
+        and locks today&rsquo;s quoted price for 48&ndash;72 hours while delivery and
+        paperwork are finalized. Deposits are fully refundable if the order
+        doesn&rsquo;t proceed.
       </p>
 
       <div className="mt-6 divide-y divide-border-soft border-y border-border-soft font-mono text-sm">
         {items.map((item) => (
-          <div key={item.slug} className="flex justify-between py-3">
-            <span className="text-text-muted truncate pr-4">{item.title}</span>
-            <span className="text-accent shrink-0">
-              {formatPrice(String(depositFor(item.price)))}
+          <div key={item.slug} className="flex items-baseline justify-between py-3 gap-4">
+            <span className="text-text-muted truncate">{item.title}</span>
+            <span className="shrink-0 text-right">
+              <span className="block text-text-muted">{priceLabel(item.price)}</span>
+              <span className="block text-xs text-accent">
+                {formatPrice(String(depositFor(item.price)))} deposit
+              </span>
             </span>
           </div>
         ))}
@@ -54,9 +62,10 @@ export default function ReservePage() {
       </div>
 
       <ul className="mt-6 space-y-2 text-xs text-text-faint">
-        <li>&middot; Deposit range: $100&ndash;$500 per unit, based on unit price.</li>
+        <li>&middot; Deposit: $1,000 per unit, required to reserve.</li>
         <li>&middot; Balance is due before delivery, not at reservation.</li>
         <li>&middot; Price lock expires 72 hours after reservation is confirmed.</li>
+        <li>&middot; Returns accepted within 7 days of delivery; return shipping and any related costs are the customer&rsquo;s responsibility.</li>
       </ul>
 
       <Link

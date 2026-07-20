@@ -14,12 +14,24 @@ const DialogContext = React.createContext<DialogContextValue | undefined>(
   undefined
 );
 
-function Dialog({ children }: { children: React.ReactNode }) {
-  const [outerOpen, setOuterOpen] = React.useState(false);
+function Dialog({
+  children,
+  open,
+  onOpenChange,
+}: {
+  children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false);
   const [innerOpen, setInnerOpen] = React.useState(false);
+  const isControlled = open !== undefined;
   return (
     <DialogContext.Provider value={{ innerOpen, setInnerOpen }}>
-      <DialogPrimitive.Root open={outerOpen} onOpenChange={setOuterOpen}>
+      <DialogPrimitive.Root
+        open={isControlled ? open : uncontrolledOpen}
+        onOpenChange={isControlled ? onOpenChange : setUncontrolledOpen}
+      >
         {children}
       </DialogPrimitive.Root>
     </DialogContext.Provider>

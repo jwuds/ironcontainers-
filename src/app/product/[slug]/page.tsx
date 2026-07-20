@@ -100,6 +100,13 @@ export default async function ProductPage({
               // here would just be a different flavor of the same
               // problem as fabricating a return policy or reviews.
             },
+            hasMerchantReturnPolicy: {
+              "@type": "MerchantReturnPolicy",
+              returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+              merchantReturnDays: 7,
+              applicableCountry: "US",
+              returnFees: "https://schema.org/ReturnShippingFees",
+            },
           },
         }
       : {}),
