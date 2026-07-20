@@ -79,7 +79,7 @@ export default async function ProductPage({
     ),
     sku: product.sku || undefined,
     url: canonicalUrl,
-    brand: { "@type": "Organization", name: SITE.name },
+    brand: { "@type": "Brand", name: SITE.name },
     ...(cartPrice
       ? {
           offers: {
@@ -88,6 +88,18 @@ export default async function ProductPage({
             priceCurrency: "USD",
             price: cartPrice,
             availability: "https://schema.org/InStock",
+            shippingDetails: {
+              "@type": "OfferShippingDetails",
+              shippingDestination: {
+                "@type": "DefinedRegion",
+                addressCountry: "US",
+              },
+              // No flat shippingRate: freight cost is quoted per unit
+              // size/location after reservation, never a fixed number —
+              // see the FAQ block below. Representing a made-up rate
+              // here would just be a different flavor of the same
+              // problem as fabricating a return policy or reviews.
+            },
           },
         }
       : {}),
