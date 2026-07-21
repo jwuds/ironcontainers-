@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "exterior-1",
+    "width": 960,
+    "height": 960,
+    "src": "/samples/exterior-1.webp"
+  },
+  {
+    "slug": "exterior-2",
+    "width": 960,
+    "height": 960,
+    "src": "/samples/exterior-2.webp"
+  },
+  {
+    "slug": "living-sliding-doors",
+    "width": 915,
+    "height": 915,
+    "src": "/samples/living-sliding-doors.webp"
+  },
+  {
+    "slug": "kitchen",
+    "width": 960,
+    "height": 960,
+    "src": "/samples/kitchen.webp"
+  },
+  {
+    "slug": "hallway-1",
+    "width": 960,
+    "height": 960,
+    "src": "/samples/hallway-1.webp"
+  },
+  {
+    "slug": "hallway-2",
+    "width": 960,
+    "height": 960,
+    "src": "/samples/hallway-2.webp"
+  },
+  {
+    "slug": "entry",
+    "width": 960,
+    "height": 960,
+    "src": "/samples/entry.webp"
+  },
+  {
+    "slug": "bathroom",
+    "width": 960,
+    "height": 960,
+    "src": "/samples/bathroom.webp"
+  },
+  {
+    "slug": "wardrobe-mirror",
+    "width": 960,
+    "height": 960,
+    "src": "/samples/wardrobe-mirror.webp"
+  },
+  {
+    "slug": "storage-nook",
+    "width": 960,
+    "height": 960,
+    "src": "/samples/storage-nook.webp"
+  }
+]

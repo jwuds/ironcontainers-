@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { getAllProducts, getGroups } from "@/lib/catalog";
 import CategoryTile from "@/components/CategoryTile";
@@ -8,17 +7,19 @@ import IndustriesGrid from "@/components/IndustriesGrid";
 import HowItWorks from "@/components/HowItWorks";
 import PartnerLogos from "@/components/PartnerLogos";
 import TransformationsTeaser from "@/components/TransformationsTeaser";
+import HeroCarousel from "@/components/HeroCarousel";
 import Reveal from "@/components/Reveal";
 import { SITE } from "@/lib/site";
+
+const HERO_IMAGES = [
+  { src: "/hero/hero1.webp", width: 1280, height: 853 },
+  { src: "/hero/hero2.webp", width: 1280, height: 851 },
+];
 
 export default function Home() {
   const groups = getGroups();
   const products = getAllProducts();
   const totalUnits = products.length;
-
-  const heroImage =
-    groups.find((g) => g.slug === "refrigerated-containers")?.heroImage ??
-    groups[0]?.heroImage;
 
   const featured = groups
     .map((g) => products.find((p) => p.groups.includes(g.slug) && p.images.length > 0))
@@ -29,16 +30,7 @@ export default function Home() {
       {/* Hero */}
       <section className="relative grain overflow-hidden border-b border-border">
         <div className="absolute inset-0">
-          {heroImage && (
-            <Image
-              src={heroImage}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover opacity-40"
-            />
-          )}
+          <HeroCarousel images={HERO_IMAGES} />
           <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/80 to-bg/40" />
           <div className="absolute inset-0 bg-gradient-to-r from-bg via-bg/10 to-transparent" />
         </div>

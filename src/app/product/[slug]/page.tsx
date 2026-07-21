@@ -59,6 +59,11 @@ export default async function ProductPage({
   const salePrice = formatPrice(product.salePrice);
   const primaryGroup = product.groups[0] ? getGroupBySlug(product.groups[0]) : undefined;
   const isOffshore = product.groups.includes("offshore-certified");
+  // This one listing is a photographed sample of a completed, already-sold
+  // custom build — not a reservable in-stock unit like the rest of the
+  // catalog — so it gets the same "talk to a person" CTA treatment as
+  // offshore-certified products instead of a cart/reserve flow.
+  const isSample = product.slug === "custom-container-home-conversion";
   const related = getRelatedProducts(product, 4);
   const comparables = getComparableProducts(product, 6);
   const guides = getRelevantPosts(product.groups);
@@ -219,13 +224,19 @@ export default async function ProductPage({
             )}
             <a
               href={`mailto:${SITE.email}?subject=${encodeURIComponent(
-                `Quote request: ${product.title}`
+                isSample
+                  ? `Custom build inquiry: ${product.title}`
+                  : `Quote request: ${product.title}`
               )}`}
               className="mt-4 min-h-14 inline-flex w-full items-center justify-center bg-accent text-accent-ink font-semibold px-6 py-3 clip-corner-sm hover:bg-accent-hover transition-colors"
             >
-              {isOffshore ? "Contact a Specialist" : price ? "Request a Quote" : "Get Pricing"}
+              {isOffshore || isSample
+                ? "Discuss a Similar Build"
+                : price
+                  ? "Request a Quote"
+                  : "Get Pricing"}
             </a>
-            {!isOffshore && (
+            {!isOffshore && !isSample && (
               <ReserveButton
                 slug={product.slug}
                 title={product.title}
