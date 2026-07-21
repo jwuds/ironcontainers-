@@ -33,6 +33,8 @@ export default function CheckoutPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", zip: "" });
   const [payment, setPayment] = useState<PaymentSummary | null>(null);
   const [paymentError, setPaymentError] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
   const totalDeposit = items.reduce((sum, i) => sum + depositFor(i.price), 0);
 
   if (submitted && confirmedOrder) {
@@ -105,7 +107,7 @@ export default function CheckoutPage() {
     );
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!payment) {
       setPaymentError(true);
@@ -115,33 +117,44 @@ export default function CheckoutPage() {
       payment.method === "creditcard"
         ? `${METHOD_LABEL[payment.method]} ending in ${payment.last4 || "----"}`
         : METHOD_LABEL[payment.method];
-    const lines = [
-      `Reservation request from ${form.name || "(no name given)"}`,
-      `Email: ${form.email}`,
-      `Phone: ${form.phone || "n/a"}`,
-      `Delivery ZIP: ${form.zip || "n/a"}`,
-      `Preferred payment method: ${paymentLabel}`,
-      "",
-      "Units:",
-      ...items.map((i) => `- ${i.title} (deposit ${formatPrice(String(depositFor(i.price)))})`),
-      "",
-      `Total deposit due: ${formatPrice(String(totalDeposit))}`,
-    ];
-    const href = `mailto:${SITE.email}?subject=${encodeURIComponent(
-      `Reservation request (${items.length} unit${items.length === 1 ? "" : "s"})`
-    )}&body=${encodeURIComponent(lines.join("\n"))}`;
-    window.location.href = href;
-    setConfirmedOrder({
-      items: items.map((i) => ({ title: i.title, deposit: depositFor(i.price) })),
-      totalDeposit,
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-      zip: form.zip,
-      paymentLabel,
-    });
-    setSubmitted(true);
-    clear();
+    const orderItems = items.map((i) => ({ title: i.title, deposit: depositFor(i.price) }));
+
+    setSending(true);
+    setSendError(null);
+    try {
+      const res = await fetch("/api/reservation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          zip: form.zip,
+          paymentLabel,
+          items: orderItems,
+          totalDeposit,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Request failed");
+      }
+      setConfirmedOrder({
+        items: orderItems,
+        totalDeposit,
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        zip: form.zip,
+        paymentLabel,
+      });
+      setSubmitted(true);
+      clear();
+    } catch (err) {
+      setSendError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -240,12 +253,20 @@ export default function CheckoutPage() {
           <span className="text-accent font-semibold">{formatPrice(String(totalDeposit))}</span>
         </div>
 
+        {sendError && (
+          <p className="text-sm text-red-400">
+            Couldn&rsquo;t send your reservation request: {sendError}. Please try
+            again or call {SITE.phoneDisplay}.
+          </p>
+        )}
+
         <motion.button
           whileTap={{ scale: 0.98 }}
           type="submit"
-          className="mt-2 inline-flex w-full items-center justify-center bg-accent text-accent-ink font-semibold px-6 py-3 clip-corner-sm hover:bg-accent-hover transition-colors"
+          disabled={sending}
+          className="mt-2 inline-flex w-full items-center justify-center bg-accent text-accent-ink font-semibold px-6 py-3 clip-corner-sm hover:bg-accent-hover transition-colors disabled:opacity-60"
         >
-          Submit Reservation Request &rarr;
+          {sending ? "Sending..." : "Submit Reservation Request →"}
         </motion.button>
       </form>
       <Link

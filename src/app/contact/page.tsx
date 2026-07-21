@@ -5,18 +5,23 @@ import { motion } from "framer-motion";
 import { SITE } from "@/lib/site";
 
 export default function ContactPage() {
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const href = `mailto:${SITE.email}?subject=${encodeURIComponent(
-      `Contact form: ${form.name || "Website visitor"}`
-    )}&body=${encodeURIComponent(
-      `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`
-    )}`;
-    window.location.href = href;
-    setSubmitted(true);
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error();
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    }
   }
 
   return (
@@ -57,9 +62,10 @@ export default function ContactPage() {
         <li>&middot; Refundable deposit, no pressure to commit</li>
       </ul>
 
-      {submitted ? (
+      {status === "sent" ? (
         <p className="mt-10 text-text-muted">
-          We&rsquo;ve opened an email to {SITE.name} sales with your message.
+          Sent &mdash; a message with your details has gone to {SITE.name}. We&rsquo;ll
+          get back to you shortly.
         </p>
       ) : (
         <form onSubmit={handleSubmit} className="mt-10 space-y-4">
@@ -99,12 +105,19 @@ export default function ContactPage() {
               className="mt-1 w-full border border-border-soft bg-bg-raised px-3 py-2 text-sm focus:border-accent outline-none transition-colors"
             />
           </div>
+          {status === "error" && (
+            <p className="text-sm text-red-400">
+              Something went wrong sending your message &mdash; please try again or
+              call {SITE.phoneDisplay}.
+            </p>
+          )}
           <motion.button
             whileTap={{ scale: 0.98 }}
             type="submit"
-            className="mt-2 inline-flex w-full items-center justify-center bg-accent text-accent-ink font-semibold px-6 py-3 clip-corner-sm hover:bg-accent-hover transition-colors"
+            disabled={status === "sending"}
+            className="mt-2 inline-flex w-full items-center justify-center bg-accent text-accent-ink font-semibold px-6 py-3 clip-corner-sm hover:bg-accent-hover transition-colors disabled:opacity-60"
           >
-            Send Message &rarr;
+            {status === "sending" ? "Sending..." : "Send Message →"}
           </motion.button>
         </form>
       )}
