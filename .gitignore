@@ -36,6 +36,14 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Claude Code local tooling state (skills cache, scheduled-task locks) —
+# not project content.
+/.claude/
+
+# Separate, independently-versioned project (has its own .git) that lives
+# alongside this repo on disk — not part of the site.
+/seomachine/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
