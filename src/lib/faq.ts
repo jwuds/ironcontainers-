@@ -19,7 +19,7 @@ export function getProductFaqs(product: Product): FaqItem[] {
   faqs.push({
     question: "How does the deposit and reservation process work?",
     answer:
-      "A refundable deposit of $1,000 holds this unit and locks the quoted price for 48–72 hours while we confirm availability and arrange delivery. If your order doesn't move forward, the deposit is fully refunded.",
+      "A refundable deposit of up to $1,000 (or the item's full price if it's lower) holds this unit and locks the quoted price for 48–72 hours while we confirm availability and arrange delivery. If your order doesn't move forward, the deposit is fully refunded.",
   });
 
   faqs.push({

@@ -26,7 +26,7 @@ export default function ReserveButton({
         addItem({ slug, title, image, price });
         router.push("/cart/reserve");
       }}
-      className="mt-2 inline-flex w-full items-center justify-center border border-accent text-accent font-semibold px-6 py-3 clip-corner-sm hover:bg-accent hover:text-accent-ink transition-colors"
+      className="mt-3 min-h-14 inline-flex w-full items-center justify-center border border-accent text-accent font-semibold px-6 py-3 clip-corner-sm hover:bg-accent hover:text-accent-ink transition-colors"
     >
       Reserve This Unit &rarr;
     </motion.button>

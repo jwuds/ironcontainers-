@@ -113,41 +113,57 @@ const GROUPS = [
     slug: 'shipping-containers',
     name: 'Shipping Containers',
     blurb: 'Standard, high cube, and specialty dry containers — new and used.',
+    intro:
+      "Standard shipping containers come in three common sizes — 20ft, 40ft, and 40ft high cube — and cover most storage, conversion, and shipping needs. A 40ft high cube adds roughly a foot of interior height over a standard 40ft box, which matters for tall equipment storage or container-home conversions where headroom is tight. Condition and grade vary more than size: a New/One-Trip unit looks close to factory-fresh, while Cargo Worthy units are inspected and certified to ship freight again, and Wind & Water Tight units trade cosmetic wear for a lower price on units that just need to keep contents dry. See our container grades guide below for the full breakdown of what each grade means before you buy. Whether you need a jobsite storage box, a permanent structure, or a container ready to move freight, filtering by sub-category on this page narrows the list to the configuration that fits.",
   },
   {
     slug: 'refrigerated-containers',
     name: 'Refrigerated Containers',
     blurb: 'Reefer containers for cold-chain storage and transport.',
+    intro:
+      "Refrigerated containers (reefers) pair an insulated steel box with a self-contained refrigeration unit — typically Thermo King or Carrier — capable of holding a set temperature range independent of the weather outside. Mount type is the main configuration choice: clip-on units bolt to the outside of the container and are easier to access for service, while undermount units sit beneath the floor and free up a few extra inches of interior length. Reefers are a common fit for farm and produce cold storage, pharmaceutical and other precision cold-chain applications (which should confirm calibration and temperature-logging capability before relying on a unit for regulated storage), and any operation that needs mobile or semi-permanent temperature-controlled space. Our reefer buying guide below covers what to check on a unit's maintenance history before you commit to one.",
   },
   {
     slug: 'offshore-certified',
     name: 'Offshore & Certified Containers',
     blurb: 'DNV 2.7-1 certified dry, half-height, open-top, and refrigerated units.',
+    intro:
+      "DNV 2.7-1 is the offshore container certification standard used across the oil, gas, and marine industry for units that will be lifted by crane, transported by vessel, or used on an offshore platform — it covers structural testing well beyond what a standard ISO shipping container is built or certified for. Containers in this category carry that certification across several configurations: standard dry units, half-height units for heavier, denser cargo, open-top units for oversized loads, and refrigerated units for offshore cold storage. If a project requires DNV-certified equipment for regulatory or insurance reasons, confirming the specific certification documentation and inspection date on the unit you're buying is worth doing before reservation, not after.",
   },
   {
     slug: 'refrigeration-gensets',
     name: 'Refrigeration Units & Gensets',
     blurb: 'Thermo King and Carrier refrigeration units and undermount gensets.',
+    intro:
+      "This category covers the refrigeration hardware itself — Thermo King and Carrier clip-on and undermount units — separate from the insulated containers they attach to. It's the place to look if a reefer container's onboard refrigeration unit needs replacing rather than replacing the whole container, or if you're building out a custom cold-storage setup and sourcing the refrigeration unit and container separately. Clip-on units are the easier swap since they bolt to the outside and don't require floor work; undermount units take more installation effort but preserve interior container length. Check compatibility (mount type, container size, power requirements) against your existing setup before ordering a replacement unit.",
   },
   {
     slug: 'generators-power',
     name: 'Generators & Power Systems',
     blurb: 'Standalone CAT electric power systems.',
+    intro:
+      "Standalone CAT generators and power systems in this category are built for continuous or standby electric power rather than being tied to a specific refrigeration unit — common uses include backup power for a facility, primary power at a remote site with no grid connection, and temporary power for construction or event sites. Sizing a generator correctly for your actual load (not just nameplate capacity) is the main decision point; if you're not sure what capacity your application needs, our team can help you think through it before you reserve a unit.",
   },
   {
     slug: 'tanks',
     name: 'Tanks',
     blurb: 'Propane and NH3 storage tanks.',
+    intro:
+      "Propane and NH3 (anhydrous ammonia) storage tanks in this category are typically ASME-certified — the American Society of Mechanical Engineers standard that governs pressure vessel design and testing for tanks like these. Configurations include above-ground and underground propane tanks in a range of capacities, and NH3 tanks sized for agricultural fertilizer applications. Above-ground tanks are simpler to install and inspect; underground tanks free up surface space but require excavation and typically a riser for access. Confirm local code and fire-marshal setback requirements for your installation site before choosing between above-ground and underground, since those rules vary by jurisdiction and aren't something we can advise on directly.",
   },
   {
     slug: 'trailers-chassis',
     name: 'Trailers & Chassis',
     blurb: 'LPG transport trailers, refrigerated trailers, and container chassis.',
+    intro:
+      "This category covers the equipment that moves containers and bulk product rather than storing it: LPG transport trailers built to move propane and similar gases over the road, refrigerated trailers for mobile cold-chain transport, and container chassis for hauling shipping containers by truck. Chassis compatibility depends on container size and corner-casting type, so confirm your container's dimensions match the chassis you're pairing it with before ordering both together.",
   },
   {
     slug: 'accessories-parts',
     name: 'Accessories & Parts',
     blurb: 'Parts and accessories for containers and equipment.',
+    intro:
+      "Accessories and parts round out a container or equipment purchase without requiring a whole new unit: lock boxes and security hardware, roll-up door framing kits, vents, window and shutter kits, and other components sized for standard container and equipment configurations. If you're not sure whether a part fits your specific unit, check the spec listing on the part's product page or ask before ordering — fitment varies enough across container generations that a general-purpose part isn't always a drop-in fit.",
   },
 ];
 
@@ -249,11 +265,11 @@ function isIncompleteSourceListing(p) {
 }
 
 // Some source listings have a warehouse-location tag ("Graham_TX",
-// "Atlanta_GA") sitting in the scraped sku field instead of a real SKU —
-// a source-side data-entry mixup, not a product code. Never show it as if
-// it were a SKU.
+// "Atlanta_GA", or multi-word cities like "Los_Angeles_CA") sitting in the
+// scraped sku field instead of a real SKU — a source-side data-entry
+// mixup, not a product code. Never show it as if it were a SKU.
 function isLocationCodeNotSku(sku) {
-  return /^[A-Za-z]+_[A-Z]{2}$/.test(sku);
+  return /^[A-Za-z]+(_[A-Za-z]+)*_[A-Z]{2}$/.test(sku);
 }
 
 // dedupeByTitle only collapses exact-normalized-title matches. These pairs

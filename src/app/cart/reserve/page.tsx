@@ -62,7 +62,7 @@ export default function ReservePage() {
       </div>
 
       <ul className="mt-6 space-y-2 text-xs text-text-faint">
-        <li>&middot; Deposit: $1,000 per unit, required to reserve.</li>
+        <li>&middot; Deposit: up to $1,000 per unit (or the item&rsquo;s full price if lower), required to reserve.</li>
         <li>&middot; Balance is due before delivery, not at reservation.</li>
         <li>&middot; Price lock expires 72 hours after reservation is confirmed.</li>
         <li>&middot; Returns accepted within 7 days of delivery; return shipping and any related costs are the customer&rsquo;s responsibility.</li>

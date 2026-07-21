@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import {
   getGroupBySlug,
   getGroups,
   getProductsByGroup,
+  getRelatedGroups,
   getSubCategories,
 } from "@/lib/catalog";
-import ProductCard from "@/components/ProductCard";
+import { getRelevantPosts } from "@/lib/blog";
+import CategoryBrowser, { CategoryBrowserFallback } from "@/components/CategoryBrowser";
 import { JsonLd } from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
-
-const PAGE_SIZE = 24;
+import { PAGE_SIZE } from "@/lib/category-constants";
 
 export function generateStaticParams() {
   return getGroups().map((g) => ({ slug: g.slug }));
@@ -33,50 +35,27 @@ export async function generateMetadata({
   };
 }
 
-type SortKey = "default" | "price-asc" | "price-desc";
-
+// No `searchParams` prop here on purpose: reading it would force this
+// entire route dynamic on every request, including the 8 bare category
+// URLs with no query string — the only category URLs actually in the
+// sitemap/canonicalized (filtered/sorted/paginated variants below always
+// canonicalize back to this bare URL, so they were never meant to be
+// independently indexed). Filter/sort/pagination state now lives in
+// CategoryBrowser, a Client Component that reads the URL itself, so this
+// page can stay a static, cacheable shell. See CategoryBrowser.tsx.
 export default async function CategoryPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ sub?: string; sort?: string; page?: string }>;
 }) {
   const { slug } = await params;
-  const sp = await searchParams;
   const group = getGroupBySlug(slug);
   if (!group) notFound();
 
-  let items = getProductsByGroup(slug);
+  const items = getProductsByGroup(slug);
   const subCats = getSubCategories(slug);
-
-  if (sp.sub) {
-    items = items.filter((p) => p.rawCategories.includes(sp.sub!));
-  }
-
-  const sort: SortKey =
-    sp.sort === "price-asc" || sp.sort === "price-desc" ? sp.sort : "default";
-  if (sort !== "default") {
-    items = [...items].sort((a, b) => {
-      const av = Number(a.regularPrice) || (sort === "price-asc" ? Infinity : -Infinity);
-      const bv = Number(b.regularPrice) || (sort === "price-asc" ? Infinity : -Infinity);
-      return sort === "price-asc" ? av - bv : bv - av;
-    });
-  }
-
-  const page = Math.max(1, Number(sp.page) || 1);
-  const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
-  const pageItems = items.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
-  const buildHref = (overrides: Record<string, string | undefined>) => {
-    const params = new URLSearchParams();
-    const merged = { sub: sp.sub, sort: sp.sort, page: sp.page, ...overrides };
-    for (const [k, v] of Object.entries(merged)) {
-      if (v) params.set(k, v);
-    }
-    const qs = params.toString();
-    return `/category/${slug}${qs ? `?${qs}` : ""}`;
-  };
+  const guides = getRelevantPosts([slug]);
+  const relatedGroups = getRelatedGroups(slug);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -92,12 +71,24 @@ export default async function CategoryPage({
     ],
   };
 
+  // Capped to the first page's worth of products — matches what's
+  // actually rendered by default (CategoryBrowserFallback / page 1)
+  // rather than dumping all N products into the JSON-LD payload.
   const collectionJsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: `${group.name} — ${SITE.name}`,
     description: group.blurb,
     url: `${SITE.url}/category/${slug}`,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: items.length,
+      itemListElement: items.slice(0, PAGE_SIZE).map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${SITE.url}/product/${p.slug}`,
+      })),
+    },
   };
 
   return (
@@ -124,90 +115,54 @@ export default async function CategoryPage({
         </span>
       </div>
 
-      {/* Sub-category filter chips */}
-      {subCats.length > 1 && (
-        <div className="flex flex-wrap gap-2 mb-6">
-          <Link
-            href={buildHref({ sub: undefined, page: undefined })}
-            className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider border transition-colors ${
-              !sp.sub
-                ? "bg-accent text-accent-ink border-accent"
-                : "border-border text-text-muted hover:border-accent hover:text-accent"
-            }`}
-          >
-            All
-          </Link>
-          {subCats.slice(0, 12).map((c) => (
-            <Link
-              key={c.name}
-              href={buildHref({ sub: c.name, page: undefined })}
-              className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider border transition-colors ${
-                sp.sub === c.name
-                  ? "bg-accent text-accent-ink border-accent"
-                  : "border-border text-text-muted hover:border-accent hover:text-accent"
-              }`}
-            >
-              {c.name} ({c.count})
-            </Link>
-          ))}
+      {group.intro && (
+        <p className="mb-10 max-w-3xl text-text-muted leading-relaxed">{group.intro}</p>
+      )}
+
+      <Suspense
+        fallback={
+          <CategoryBrowserFallback products={items} groupSlug={slug} subCats={subCats} />
+        }
+      >
+        <CategoryBrowser products={items} groupSlug={slug} subCats={subCats} />
+      </Suspense>
+
+      {guides.length > 0 && (
+        <div className="mt-16 pt-10 border-t border-border max-w-3xl">
+          <h2 className="font-mono text-xs uppercase tracking-widest text-text-faint mb-3">
+            Related Guides
+          </h2>
+          <ul className="flex flex-col gap-2">
+            {guides.map((post) => (
+              <li key={post.slug}>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="text-sm text-accent hover:text-accent-hover transition-colors underline underline-offset-2"
+                >
+                  {post.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
-      {/* Sort */}
-      <div className="flex items-center gap-2 mb-8 font-mono text-xs uppercase tracking-wider text-text-faint">
-        <span>Sort:</span>
-        {[
-          { key: "default", label: "Featured" },
-          { key: "price-asc", label: "Price ↑" },
-          { key: "price-desc", label: "Price ↓" },
-        ].map((s) => (
-          <Link
-            key={s.key}
-            href={buildHref({ sort: s.key === "default" ? undefined : s.key, page: undefined })}
-            className={`px-2.5 py-1 border transition-colors ${
-              sort === s.key
-                ? "border-accent text-accent"
-                : "border-border-soft hover:border-accent hover:text-accent"
-            }`}
-          >
-            {s.label}
-          </Link>
-        ))}
-      </div>
-
-      {pageItems.length === 0 ? (
-        <p className="text-text-muted py-16 text-center">
-          No units match this filter right now.
-        </p>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {pageItems.map((p, i) => (
-            <ProductCard key={p.slug} product={p} index={i} />
-          ))}
-        </div>
-      )}
-
-      {totalPages > 1 && (
-        <div className="mt-10 flex items-center justify-center gap-2 font-mono text-sm">
-          {page > 1 && (
-            <Link
-              href={buildHref({ page: String(page - 1) })}
-              className="px-3 py-1.5 border border-border hover:border-accent hover:text-accent transition-colors"
-            >
-              &larr; Prev
-            </Link>
-          )}
-          <span className="px-3 py-1.5 text-text-muted">
-            {page} / {totalPages}
-          </span>
-          {page < totalPages && (
-            <Link
-              href={buildHref({ page: String(page + 1) })}
-              className="px-3 py-1.5 border border-border hover:border-accent hover:text-accent transition-colors"
-            >
-              Next &rarr;
-            </Link>
-          )}
+      {relatedGroups.length > 0 && (
+        <div className="mt-10 pt-10 border-t border-border">
+          <h2 className="font-mono text-xs uppercase tracking-widest text-text-faint mb-4">
+            Related Categories
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            {relatedGroups.map((g) => (
+              <Link
+                key={g.slug}
+                href={`/category/${g.slug}`}
+                className="px-4 py-2 border border-border-soft text-sm text-text-muted hover:border-accent hover:text-accent transition-colors"
+              >
+                {g.name} &rarr;
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </div>

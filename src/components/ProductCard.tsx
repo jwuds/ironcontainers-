@@ -85,7 +85,7 @@ export default function ProductCard({
             title={product.title}
             image={image}
             price={cartPrice}
-            className="w-full border border-accent/60 py-1.5 font-mono text-[10px] uppercase tracking-widest text-accent hover:bg-accent hover:text-accent-ink transition-colors"
+            className="min-h-11 w-full flex items-center justify-center border border-accent/60 py-1.5 font-mono text-[10px] uppercase tracking-widest text-accent hover:bg-accent hover:text-accent-ink transition-colors"
           />
         ) : (
           <AddToCartButton
@@ -93,7 +93,7 @@ export default function ProductCard({
             title={product.title}
             image={image}
             price={cartPrice}
-            className="w-full border border-border-soft py-1.5 font-mono text-[10px] uppercase tracking-widest text-text-muted hover:border-accent hover:text-accent transition-colors disabled:opacity-60 disabled:hover:border-border-soft disabled:hover:text-text-muted"
+            className="min-h-11 w-full flex items-center justify-center border border-border-soft py-1.5 font-mono text-[10px] uppercase tracking-widest text-text-muted hover:border-accent hover:text-accent transition-colors disabled:opacity-60 disabled:hover:border-border-soft disabled:hover:text-text-muted"
           />
         )}
       </div>

@@ -71,9 +71,11 @@ export function useCart() {
   return ctx;
 }
 
-// Flat $1,000 deposit to reserve any unit, regardless of price.
+// Deposit to reserve a unit: $1,000, or the item's price if it's cheaper
+// (so a low-ticket accessory never shows a deposit larger than its price).
 export const DEPOSIT_AMOUNT = 1000;
 
-export function depositFor(_price: number | null): number {
-  return DEPOSIT_AMOUNT;
+export function depositFor(price: number | null): number {
+  if (price == null) return DEPOSIT_AMOUNT;
+  return Math.min(DEPOSIT_AMOUNT, price);
 }

@@ -1,53 +1,123 @@
-# Backlink Profile & Off-Page Authority — containeronedepot.com
+# Backlink Profile
 
-**Category score: 8/100** — expected and fine for a brand-new domain; the number reflects zero discoverable link equity today, not a fixable defect.
+Score: 8/100 (diagnostic — off-page, not folded into overall health score)
 
-## Current state
+## Method
 
-No paid backlink API (Moz/Bing/DataForSEO) credentials were found in this environment (`scripts/backlinks_auth.py` does not exist here), so this assessment relies entirely on free, directly-verified signals. No live web-search tool was available either, so "no third-party mentions found" below means "none surfaced via the checks run," not "confirmed zero across the entire web."
+Re-run of the 2026-07-19 backlink audit, 2 days later, same methodology, for consistency
+tracking. `python3 scripts/backlinks_auth.py --check --json` confirms **Tier 0** (Common
+Crawl + verification crawler only; Moz, Bing Webmaster, and DataForSEO keys are not
+configured in this environment). No known/claimed backlinks exist to feed into
+`verify_backlinks.py` (none surfaced in the prior audit either), so the verification
+crawler had nothing to check this round.
 
-Verified directly:
-- **Common Crawl**: queried the 3 most recent CDX indexes (2026-25, 2026-21, 2025-51) for `containeronedepot.com` and `*.containeronedepot.com` — **zero captures in all three**. The domain has not yet been picked up by CC's crawl seeds. Confidence: 0.50 (domain-level, absence-of-data signal).
-- **Wayback Machine CDX**: zero archived snapshots at any point in time. Confidence: 0.50.
-- **Site itself**: live, returns HTTP 200, `robots.txt` is permissive (`Allow: /`), sitemap.xml exists and is well-formed. So the domain is crawlable — it simply hasn't accumulated inbound links or third-party crawl attention yet.
-- **Git history**: the "Rebrand to Container One Depot" commit (2026-07-03) confirms this is a relaunch, ~2 weeks old at time of audit. Any backlink equity from a prior brand/domain does not carry over.
-- **Site content**: no physical street address found in code (`src/lib/site.ts` has phone only, no NAP address) — limits local-citation tactics unless a real yard/office address exists to publish.
-- **OEM mentions present in catalog data**: Carrier, Thermo King, Caterpillar (CAT), Kubota appear extensively as unit specs/brands across `products.json` — these are potential co-marketing/citation angles, not yet exploited.
-- Note: several product image URLs in `products.json` still point to `conexdepotshipping.com` (a named competitor) — not a backlink issue per se, but flag for the technical/content workstream since it's an external hotlink dependency, not evidence of any link relationship.
+`commoncrawl_graph.py` was run for both `containeronedepot.com` and the brand-collision
+competitor `containerone.net` (to check for co-citation/referring-domain overlap). Both
+queries ran for several minutes with no result and no error — they hung against the CC
+index rather than completing. Per the skill's error-handling guidance ("if Common Crawl
+download times out, skip CC metrics and note the timeout"), CC metrics are **skipped this
+round**. That timeout is distinct from the prior audit's finding: the prior run completed
+three CDX queries and got a confirmed zero-captures result (0.50 confidence); this run
+simply did not get a fresh reading either way, so it neither confirms nor contradicts the
+prior zero.
 
-## Findings / Recommendations
+## What Works
 
-- **title**: Zero discoverable backlink or crawl footprint
-  **severity**: Info
-  **description**: No Common Crawl or Wayback captures exist for the domain at any date. This is expected for a 2-week-old rebrand and is not itself an error — but it means literally every off-page signal (referring domains, anchor text, authority) starts at zero.
-  **recommendation**: Do not attempt a numeric DA/backlink-count target yet. Re-baseline in 60-90 days once Search Console shows discovery, then bring in Moz/DataForSEO for a real quantitative read.
+- Site remains live, crawlable, and technically healthy per the prior audit (HTTP 200,
+  permissive robots.txt, well-formed sitemap.xml) — nothing here would block link
+  discovery once outreach/citation activity starts.
+- OEM brand mentions (Carrier, Thermo King, Caterpillar, Kubota) remain present across the
+  catalog per the prior audit — still the most realistic near-term citation/co-marketing
+  angle, unexploited but unchanged.
+- No evidence of toxic, spammy, or manipulative link-building activity — the profile is
+  clean by virtue of being empty, not by virtue of having been cleaned up.
 
-- **title**: No physical address published limits local SEO citation building
-  **severity**: Medium
-  **description**: `site.ts` exposes only a phone number, no street address. Structured local citations (Google Business Profile, BBB, industry directories that require NAP) need a consistent address to be effective.
-  **recommendation**: If there is a real yard/office/depot location, publish full NAP consistently in the footer and schema.org `LocalBusiness` markup, then pursue GBP + core citation aggregators (Yelp, BBB, Data Axle). If the business is broker/drop-ship only with no location, skip local citations and focus on industry-directory + digital PR tracks instead.
+## Findings
 
-- **title**: Realistic near-term tier: industry directories + OEM/dealer citations (0-3 months)
-  **severity**: High
-  **description**: The catalog already references Carrier, Thermo King, Caterpillar, and Kubota by name across hundreds of listings. This is low-competition, high-relevance link inventory that doesn't require competing for authority against 10-year-old incumbents.
-  **recommendation**: Submit to container/modular/equipment resale directories (e.g., trade association member listings, ISBU/container industry directories, used-equipment marketplaces like MachineryTrader/IronPlanet company profiles), and inquire about authorized-dealer or reseller listing pages from Thermo King/Carrier regional distributors if a genuine dealer relationship exists. Only pursue if the relationship is real — do not claim OEM affiliation without one.
+**Zero discoverable backlink/crawl footprint (unconfirmed this round due to CC timeout)**
+Severity: Info
+Description: The prior audit confirmed zero Common Crawl and Wayback captures via three
+completed CDX queries. This round's Common Crawl query for containeronedepot.com did not
+complete within a reasonable wait (several minutes, no output, no error) and was abandoned
+rather than yielding a fresh confirmed reading. The domain is now ~18 days old (rebranded
+2026-07-03); since CC's index refreshes quarterly, no material change would be expected
+even had the query completed on schedule.
+Recommendation: Re-attempt the CC query in a follow-up session (a stale cache or network
+path may have caused the hang); if it continues to time out, fall back to lighter-weight
+Wayback Machine CDX spot-checks. Do not re-baseline numerically until either CC succeeds or
+60-90 days have passed, per the prior audit's original recommendation.
+Status vs prior audit: Unchanged / unverifiable this round — no regression implied, just no
+fresh confirmation. Score held at 8/100 since there is no new signal in either direction.
 
-- **title**: Digital PR / earned-link angle worth testing (3-6 months)
-  **severity**: Medium
-  **description**: Industrial equipment resale has natural news hooks (shipping container housing trends, cold-chain/reefer container shortages, disaster-relief/temporary structure demand) that trade press and local business journals will cover.
-  **recommendation**: One or two data-backed pitches (e.g., "reefer container resale pricing trends") to trade outlets (Freight Waves, construction/logistics trade blogs) is realistic. Do not budget for national consumer press — it's the wrong audience and unlikely to land for a 2-week-old brand.
+**Brand-collision competitor (containerone.net) co-citation check could not run**
+Severity: Medium
+Description: This audit was asked to specifically flag the known brand-collision
+competitor "Container One" (containerone.net) if it appeared in any referring-domain or
+co-citation context. The Common Crawl query for containerone.net also timed out with no
+data, so no co-citation signal (shared referring domains, ambiguous anchor text, etc.) was
+obtainable this round. This remains an open, unresolved risk: if third parties link to
+"Container One" using ambiguous or shortened anchor text, some authority or referral
+traffic could be misattributed given the near-identical brand name.
+Recommendation: Re-run `commoncrawl_graph.py containerone.net --json` in a follow-up
+session with a longer timeout budget, and consider a manual web search for
+"Container One" + "Container One Depot" co-mentions to catch early confusion before it
+compounds. This is a brand-disambiguation watch item, not a technical fix to
+containeronedepot.com itself.
+Status vs prior audit: New check, no data obtained — this specific co-citation angle was
+not checked in the 2026-07-19 audit (containerone.net is named there only as a likely
+established competitor, not queried directly), so this is the first attempt and it did not
+return usable data.
 
-- **title**: Do not attempt head-to-head competitive link building yet
-  **severity**: Critical
-  **description**: Conex Depot, Mobile Modular, and Long Beach Off-Coast likely carry a decade-plus of accumulated referring domains. No realistic 3-6 month tactic closes that gap, and chasing their exact link sources (guest posts on generic "business" blogs, PBN-adjacent directories) risks low-quality link penalties with no offsetting authority gain this early.
-  **recommendation**: Reallocate that effort into on-site content/technical SEO and the directory/OEM tactics above; revisit competitive gap analysis (Bing `compare` or DataForSEO) once the domain has 90+ days of indexed history to compare against.
+**No physical address published limits local SEO citation building**
+Severity: Medium
+Description: Per the prior audit, `site.ts` exposed only a phone number, no street address,
+which blocks structured local citations (Google Business Profile, BBB, directory NAP
+listings) that require consistent NAP data. Not re-verified against current site code this
+round since this re-run focused on off-page/CC signals, but no change is expected or
+reported elsewhere.
+Recommendation: Unchanged from prior — if a real yard/office/depot address exists, publish
+full NAP consistently in the footer and `LocalBusiness` schema, then pursue GBP and core
+citation aggregators. If broker/drop-ship only with no location, skip local citations and
+focus on industry-directory and digital PR tracks instead.
+Status vs prior audit: Unchanged — carried forward as still open, not re-verified this
+round.
+
+**Realistic near-term tier: industry directories + OEM/dealer citations (0-3 months)**
+Severity: High
+Description: Unchanged opportunity from the prior audit — the catalog's extensive Carrier,
+Thermo King, Caterpillar, and Kubota mentions remain low-competition, high-relevance link
+inventory that hasn't required competing for authority against 10-year-old incumbents, and
+there is no evidence any of it has been actioned in the two days since the prior audit.
+Recommendation: Unchanged from prior — submit to container/modular/equipment resale
+directories (trade association listings, ISBU/container industry directories,
+MachineryTrader/IronPlanet-style marketplace company profiles) and inquire about
+authorized-dealer or reseller listings from OEM regional distributors, only where a genuine
+relationship exists.
+Status vs prior audit: Unchanged, still not actioned.
+
+**Do not attempt head-to-head competitive link building yet**
+Severity: Critical
+Description: Unchanged from the prior audit — established competitors (Conex Depot, Mobile
+Modular, Long Beach Off-Coast, and the brand-collision competitor Container One /
+containerone.net) almost certainly carry a decade-plus of accumulated referring domains.
+Two days is far too short a window for any material shift in that gap, and this audit found
+no evidence of one (nor could it obtain fresh comparative data this round due to the CC
+timeout).
+Recommendation: Continue reallocating effort to on-site content/technical SEO and the
+directory/OEM tactics above. Revisit competitive gap analysis once Moz or Bing Webmaster
+credentials are configured (Tier 1/2) or the domain has 90+ days of indexed history — Bing's
+`compare` tool would be particularly well-suited to the containerone.net brand-collision
+question once available.
+Status vs prior audit: Unchanged — reaffirmed, not contradicted, by this run.
 
 ## Data source summary
 
-| Source | Confidence | Freshness | Status |
+| Source | Confidence | Freshness | Status this round |
 |---|---|---|---|
-| Common Crawl CDX (3 indexes) | 0.50 | Quarterly | Zero captures |
-| Wayback Machine CDX | 0.50 | Continuous | Zero captures |
-| Direct HTTP/robots/sitemap check | 0.95 | Live | Site healthy, crawlable |
-| Moz / Bing / DataForSEO | — | — | Not configured in this environment |
-| Live web search for mentions | — | — | Tool unavailable this session — recommend manual follow-up |
+| `backlinks_auth.py --check` | — | Live | Confirmed Tier 0 (CC + verify only; Moz/Bing/DataForSEO not configured) |
+| Common Crawl domain graph (containeronedepot.com) | — | Quarterly | Timed out, no data — not a confirmed zero this round |
+| Common Crawl domain graph (containerone.net) | — | Quarterly | Timed out, no data — co-citation check inconclusive |
+| `verify_backlinks.py` | — | Live | Not run — no known/claimed backlink list exists to verify |
+| Prior audit (2026-07-19) CC + Wayback CDX | 0.50 | Quarterly/Continuous | Zero captures (carried forward as last confirmed reading) |
+| Direct HTTP/robots/sitemap check (prior audit) | 0.95 | Live | Site healthy, crawlable (not re-verified this round, out of scope) |
+| Moz / Bing Webmaster / DataForSEO | — | — | Not configured in this environment |

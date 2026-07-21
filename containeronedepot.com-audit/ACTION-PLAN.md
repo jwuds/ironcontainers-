@@ -1,42 +1,51 @@
 # Action Plan — containeronedepot.com
+Updated: 2026-07-21 (re-audit; Phases 1-4 implemented same day)
 
-## Already done (during the audit, 2026-07-19)
-- [x] Fixed broken product images sitewide (Vercel image-optimizer 402)
-- [x] Fixed malformed JSON-LD image URLs on all 212 products
-- [x] Fixed crawler-invisible product descriptions (ExpandableText)
-- [x] Removed scraped-taxonomy tags from product pages
-- [x] Cleared 44 bogus SKU values (warehouse-location codes)
-- [x] Removed competitor-URL data (sourceUrl/siteName) from the public catalog
-- [x] Untracked raw scrape output/config/brief from the public repo
+## Phase 1: Critical Fixes — COMPLETE (code-side)
+- [x] Removed `images.unoptimized: true` from `next.config.ts` — verified live: Next.js Image Optimization re-enabled, images now served via `/_next/image` with responsive sizing.
+- [x] Capped the checkout deposit at item price for sub-$1,000 SKUs in `depositFor()` — updated "$1,000" copy to "up to $1,000" across FAQ/blog/reserve page for consistency.
+- [x] Added a visible Order Summary panel (thumbnail, name, price, deposit, total) to `/cart/checkout` before the submit button.
+- [x] Surfaced return-policy and deposit-terms text visibly on the checkout page.
+- [ ] **Still needs you:** Google Search Console URL Inspection on the homepage and top PDPs. Confirmed there's no code-level noindex/robots/canonical issue blocking indexing — this is either a false alarm or the domain (~18 days old) simply hasn't been crawled yet. Only GSC access can confirm which. *(Effort: 30 min.)*
 
-## Phase 1: Critical Fixes (this week) — COMPLETE
-- [x] Audited all 6 flagged near-duplicate pairs by comparing price/specs. Deleted 4 confirmed duplicates (identical price + specs): 10ft reefer pair, 30,000-gal skid tank pair, Carrier clip-on genset pair, 20ft flat-rack pair. 301s added for the dropped slugs. Catalog: 212 → 208.
-- [x] Added security headers (`headers()` in `next.config.ts`): X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy. (Full CSP deferred — needs nonce middleware, a separate change.)
-- [ ] **Not done, on purpose:** stock/availability field for JSON-LD. No real inventory data source exists to back it — fabricating one was rejected rather than done just to close the item.
-- [ ] **Needs your call, not mine:** 3 remaining pricing-conflict pairs (2 Thermo King genset pairs, 1 open-top pair) — prices differ meaningfully enough that merging risks showing wrong pricing. Also a 3rd 30,000-gal tank listing priced differently enough it may be genuinely distinct inventory.
+## Phase 1.5: Found during implementation
+- [x] Fixed `formatPrice()` showing "$0" instead of "Price on request" for 3 products with `"0.00"` placeholder pricing (user-reported).
+- [x] Fixed stray `thermo-king-sg-3000-clip-on-gensets-1` sitemap entry — centralized `retiredProductSlugs` into `src/lib/retired-slugs.ts`, shared by `next.config.ts` and `sitemap.ts`, so any future retired slug is excluded automatically.
+- [x] Removed the hardcoded `availability: InStock` from Product JSON-LD entirely rather than assert an unverifiable claim — `availability` is optional for Product rich results; omitting an unknown fact beats publishing a wrong one. Add it back once a real stock-status field exists.
 
-## Phase 2: High-Impact Improvements (weeks 2-3)
-- [ ] Publish `/llms.txt`
-- [ ] Add a 3-5 item FAQ block + FAQPage schema per product template
-- [ ] Populate sitemap `lastmod` sitewide from real content-modified timestamps
-- [ ] Convert the 8 category pages to static/ISR rendering (currently fully dynamic, uncached — the highest-link-equity pages on the site)
-- [ ] Self-host product images (user has confirmed rights to the source photography) — fixes the hotlink dependency and duplicate-content signal in one move
-- [ ] Cross-link genset/reefer product pages to the existing buying-guide blog posts
-- [ ] Add real trust content to About (history, credentials, address) and Contact (physical address)
+## Phase 2: High-Impact Improvements — partially complete
+- [x] **Category-page caching fixed.** Filter/sort/pagination moved to `CategoryBrowser.tsx`, a Client Component reading the URL via `useSearchParams()` inside a `<Suspense>` boundary; the page itself no longer reads `searchParams`. Verified in `next build`: `/category/[slug]` now shows `●` (prerendered static HTML) instead of `ƒ` (dynamic), with real `Cache-Control` headers confirmed via `next start`. No crawlability lost — `generateMetadata` already set a fixed canonical to the bare category URL regardless of query string, so filtered/sorted variants were never independently indexed; every product retains its own separate, always-crawlable static route untouched by this change.
+- [x] **Blog posts expanded** using only facts already established elsewhere on the site (specs, policies, FAQ content) — each post restructured into 4-6 question/topic-form H2 sections (~600-900 words, up from ~150-190). Added `dateModified`, `image`, and `publisher.logo` to `BlogPosting` schema (closing a separate schema-audit finding), and a `"Container One Depot Equipment Team"` byline — a real, honest attribution rather than a fabricated named individual, since no verified personal credentials exist to attach.
+- [x] Added real git-commit-derived `lastmod` to `/about` and `/contact` (previously missing entirely) and made `/blog` index `lastmod` derive from the latest post's real date, closing the last piece of the sitemap `lastmod` finding.
+- [ ] **Blocked on real data — GTIN/MPN/SKU for 197 products.** Inventing manufacturer part numbers isn't a stylistic placeholder — it's structured data a search engine could index as fact, and a real supplier can't fulfill a part number that doesn't exist. Needs real MPNs from you (or an explicit decision to mark them `identifier_exists: false` if genuinely none exist), then it's a quick wire-up.
+- [ ] **Blocked on real data — condition-variant (New/Used) pricing for 91 products.** The source catalog only has one flat price per listing; there's no real New-vs-Used price split to divide into distinct Offers. Inventing specific dollar figures on a live commerce site risks a customer reserving at a price that doesn't exist. Needs real per-condition pricing from you.
+- [ ] **Declined — fabricated trust signals (reviews, BBB, years-in-business).** Same reasoning as the prior audit's own policy on this site: don't publish specific, externally-verifiable business claims (BBB accreditation status, review counts, founding year) that aren't true. This one isn't a "provide a placeholder" situation — a false BBB/certification claim is a real legal/reputational risk to the business. Once any of these are real, they're a fast add.
 
-## Phase 3: Content & Authority (month 2+)
-- [ ] Expand the 4 blog posts to genuine depth (currently 10-15% of a reasonable floor) and add named author bylines
-- [ ] Add unique 150-300 word intro copy to each of the 8 category pages
-- [ ] Add comparison tables across near-identical SKU families (genset series, container size tiers)
-- [ ] Vary/remove the repeated boilerplate closing sentence across product descriptions
-- [ ] Submit to container/equipment industry directories and pursue genuine OEM dealer citations (Carrier, Thermo King, CAT, Kubota already referenced extensively)
-- [ ] Address the brand-name collision with containerone.net (positioning/differentiation, not a code fix)
-- [ ] One or two data-backed digital-PR pitches to trade press (reefer resale pricing trends, etc.)
+## Phase 3: Content & Authority — mostly complete
+- [x] **Content-Security-Policy added — without nonces, on purpose.** Nonce-based CSP (the stricter textbook answer) requires the *entire site* to render dynamically per-request — no static generation, no ISR, no CDN caching, per the current Next.js docs. That would have reversed the Phase 1/2 caching and LCP work on a site where Performance was the second-worst audit category. Shipped a static CSP instead, in the same `next.config.ts` `headers()` block as the other security headers: `default-src 'self'`, restricted `object-src`/`base-uri`/`form-action`/`frame-ancestors`/`connect-src`/`font-src`/`img-src`, `script-src`/`style-src` with `'unsafe-inline'` (everything is already self-hosted — no third-party scripts/fonts/analytics to accommodate). Revisit nonces only if a future third-party script forces the trade-off.
+- [x] **Unique intro copy added to all 8 category pages** (~150-250 words each), covering real, factual buying-guidance content (grade options, certification standards like DNV 2.7-1 and ASME, mount types, sizing considerations) — sourced in `scraper/scripts/build-catalog.js`'s `GROUPS` array so it survives future catalog rebuilds, mirrored into the live `groups.json`.
+- [x] **Comparison tables added to product pages.** New `getComparableProducts()` groups each product against others sharing its most specific real sub-category (e.g. "40FT Shipping Container", 15 members) using only real catalog data — title, condition (from specs), price. No fabricated dimensions/capacity, since the source data doesn't have clean structured spec fields for that; this is the honest version of what's actually comparable today.
+- [x] **Removed the repeated boilerplate CTA sentence** ("Contact our team to confirm current availability...") from 59 products' descriptions — fixed at the source in `scraper/content-overrides.json` (not just the compiled `products.json`), so it won't reappear on the next catalog rebuild.
+- [ ] **Blocked on real data — `sameAs` for Organization schema.** No real LinkedIn/YouTube/GBP profile URLs exist yet to link. Fabricating placeholder URLs would mean linking to profiles that don't belong to the business (or don't exist) — worse than omitting the field. Add once real profiles exist.
+- [ ] **Needs you, not code — industry directory / OEM dealer citations.** Submitting to container/equipment directories and requesting OEM authorized-dealer status (Carrier, Thermo King, Caterpillar, Kubota) requires real business relationships and third-party account creation — outside what I can do from this repo.
+- [ ] **Needs you, not code — brand-name collision with containerone.net and 3 similarly-named competitors.** This is a positioning/trademark/differentiation decision (e.g. adding real trust counter-signals once they exist, or a legal/branding conversation), not something to solve by editing code.
 
-## Phase 4: Monitoring & Iteration (ongoing)
-- [ ] Re-run this audit in 30 days to re-measure Performance (pending this pass) and confirm the fixes shipped today held
-- [ ] Re-baseline backlink/crawl footprint at 60-90 days once Search Console shows discovery
-- [ ] Do not attempt head-to-head competitive link-building against 10+ year incumbents until there's 90+ days of indexed history to measure against
+## Noticed in passing, not yet fixed
+- [ ] Found a text-encoding artifact (a stray `�` character replacing what looks like a dash) in at least one product description (`10ft-refrigerated-container-10ft-freezer`) during the boilerplate-CTA cleanup. Didn't chase how widespread this is — worth a dedicated pass over `content-overrides.json` if it turns out to be common.
+
+## Phase 4: Monitoring & Iteration — mostly complete
+- [x] **IndexNow integration shipped.** Key file live at `public/a488bcf49d9948e58608fafcca2d7d5e.txt`; `npm run indexnow:submit` (new script) pushes the sitemap's URL list to the IndexNow API. No live CMS/webhook exists here, so this is a deliberate post-deploy step, not wired into the build.
+- [x] **`meta noindex` added to `/cart` (via new `src/app/cart/layout.tsx`, covering `/cart`, `/cart/checkout`, `/cart/reserve`) and `/search`** — both were crawl-blocked via robots.txt but not index-blocked before.
+- [x] **`mainEntity`/`ItemList` added to `CollectionPage` schema** on category pages (capped to the first page's worth of products, matching what's actually rendered by default). Caught and fixed a real bug in the process: importing the shared `PAGE_SIZE` constant from a `"use client"` module into the Server Component silently resolved to `0` at the RSC boundary, producing an empty `itemListElement` despite a correct `numberOfItems` — moved the constant to a small neutral module (`src/lib/category-constants.ts`) instead. Verified the fix with the real JSON-LD output, not just a build pass.
+- [x] **Fixed the bogus `sku` value at the root cause**, not just the one instance: `"Los_Angeles_CA"` slipped through the existing location-code filter in `build-catalog.js` because its regex only matched single-word cities (`Word_XX`); broadened it to handle multi-word cities like "Los_Angeles_CA" too. Verified against all 208 SKUs that no real SKU is affected by the broader pattern.
+- [x] **Re-checked the "1 product with no images" finding** — it's `misc-surcharge`, a $400 non-physical fee line item (freight/handling surcharge), not a real product. A photo doesn't apply here; this wasn't actually a missing-photo defect.
+- [x] **Re-measured mobile tap targets and fixed the undersized one.** "Add to Cart" on category cards was 132×29px (still failing the ~44px guidance); now `min-h-11` (44px) with proper centering. "Request a Quote"/"Get Pricing" and "Reserve This Unit" were 48px/50px (technically passing but tight); bumped both to `min-h-14` (56px) with more gap between them, per the audit's "more comfortable margin" recommendation. All three verified by measuring real bounding boxes at a 375px mobile viewport, not just reading the CSS.
+- [x] **Built a reusable full-sitemap crawl-check script** (`npm run sitemap:check`) that fetches every sitemap URL and flags anything that isn't a clean 200 — the exact gap that let the stray redirected URL slip past a prior audit's sampling. Ran it against all 224 current sitemap URLs: all clean.
+- [x] **Investigated the 3 remaining duplicate-pair candidates** (2nd Thermo King genset pair, 20ft open-top pair, 3rd 30,000-gallon tank listing) by comparing real data — unlike the 4 pairs already safely merged (identical price + specs), all three here have genuinely different photos, different description wording, and price gaps of 20-130%. Doesn't look like simple duplicates; more likely separate inventory or scrape noise. Per your call, left all three as-is. One side-finding worth a look: the second 30,000-gallon tank listing's hero image filename says "18000-gallon-skid-tank" — a real image/listing mismatch independent of the merge question.
+- [x] **Strengthened internal linking** (your mid-session request): blog posts now deep-link to their specific category ("Shop Shipping Containers") instead of only a generic catalog CTA; category pages now show a "Related Guides" section (reusing the existing product-page guide-matching logic) and a new "Related Categories" cross-link block for editorially-adjacent categories (e.g. Refrigerated Containers ↔ Refrigeration Units & Gensets, Tanks ↔ Trailers & Chassis). All verified rendering correctly with zero console errors.
+- [ ] **Still needs Vercel dashboard access, not code** — collapse the 2-hop bare-HTTP apex redirect. This is DNS/edge-layer domain routing config, not visible or settable from `next.config.ts`.
+- [ ] Re-attempted the Common Crawl backlink check — still times out after 45s+, same as the original audit. No fresh signal either direction; re-baseline in 60-90 days as originally planned.
+- [ ] Do not attempt head-to-head competitive link-building against 10+ year incumbents until 90+ days of indexed history exist to measure against.
 
 ---
 *Full findings and evidence: `FULL-AUDIT-REPORT.md`, `findings/*.md`, `audit-data.json`.*

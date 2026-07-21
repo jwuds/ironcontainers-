@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { getAllProducts, getGroups } from "@/lib/catalog";
 import SearchClient, { type SearchItem } from "@/components/SearchClient";
 
-export const metadata = { title: "Search | Catalog" };
+// Disallowed in robots.txt (crawl-blocked), but that alone doesn't stop
+// Google from indexing the bare URL if something external links to it.
+export const metadata: Metadata = {
+  title: "Search | Catalog",
+  robots: { index: false, follow: false },
+};
 
 export default function SearchPage() {
   const products = getAllProducts();

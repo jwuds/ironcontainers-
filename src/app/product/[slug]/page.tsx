@@ -5,6 +5,7 @@ import {
   formatPrice,
   getAllProducts,
   getCleanExcerpt,
+  getComparableProducts,
   getGroupBySlug,
   getProductBySlug,
   getRelatedProducts,
@@ -13,6 +14,7 @@ import { getRelevantPosts } from "@/lib/blog";
 import { getProductFaqs } from "@/lib/faq";
 import Gallery from "@/components/Gallery";
 import SpecTable from "@/components/SpecTable";
+import ComparisonTable from "@/components/ComparisonTable";
 import ExpandableText from "@/components/ExpandableText";
 import ProductCard from "@/components/ProductCard";
 import ReserveButton from "@/components/ReserveButton";
@@ -58,6 +60,7 @@ export default async function ProductPage({
   const primaryGroup = product.groups[0] ? getGroupBySlug(product.groups[0]) : undefined;
   const isOffshore = product.groups.includes("offshore-certified");
   const related = getRelatedProducts(product, 4);
+  const comparables = getComparableProducts(product, 6);
   const guides = getRelevantPosts(product.groups);
   const faqs = getProductFaqs(product);
   const numericPrice = Number(product.salePrice || product.regularPrice);
@@ -87,7 +90,13 @@ export default async function ProductPage({
             url: canonicalUrl,
             priceCurrency: "USD",
             price: cartPrice,
-            availability: "https://schema.org/InStock",
+            // No `availability`: this catalog has no live inventory feed
+            // (see specs/type above), so every unit would otherwise
+            // hardcode InStock regardless of whether it's actually sold
+            // or discontinued. `availability` is recommended, not
+            // required, for Product rich results — omitting an unknown
+            // fact is safer than asserting a wrong one. Add it back once
+            // a real stock-status field exists in the catalog pipeline.
             shippingDetails: {
               "@type": "OfferShippingDetails",
               shippingDestination: {
@@ -212,7 +221,7 @@ export default async function ProductPage({
               href={`mailto:${SITE.email}?subject=${encodeURIComponent(
                 `Quote request: ${product.title}`
               )}`}
-              className="mt-4 inline-flex w-full items-center justify-center bg-accent text-accent-ink font-semibold px-6 py-3 clip-corner-sm hover:bg-accent-hover transition-colors"
+              className="mt-4 min-h-14 inline-flex w-full items-center justify-center bg-accent text-accent-ink font-semibold px-6 py-3 clip-corner-sm hover:bg-accent-hover transition-colors"
             >
               {isOffshore ? "Contact a Specialist" : price ? "Request a Quote" : "Get Pricing"}
             </a>
@@ -246,6 +255,12 @@ export default async function ProductPage({
             Full Description
           </h2>
           <ExpandableText text={product.description} />
+        </div>
+      )}
+
+      {comparables.length > 0 && (
+        <div className="mt-14 max-w-3xl">
+          <ComparisonTable current={product} comparables={comparables} />
         </div>
       )}
 

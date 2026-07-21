@@ -1,12 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useCart, depositFor } from "@/lib/cart-context";
 import { formatPrice } from "@/lib/catalog";
 import { SITE } from "@/lib/site";
 import { PaymentMethodDialog, type PaymentSummary } from "@/components/PaymentMethodDialog";
+
+function priceLabel(price: number | null) {
+  return formatPrice(price != null ? String(price) : null) ?? "Price on request";
+}
 
 const METHOD_LABEL: Record<PaymentSummary["method"], string> = {
   creditcard: "Credit Card",
@@ -171,6 +176,41 @@ export default function CheckoutPage() {
         Online deposit payment is coming soon &mdash; for now this routes straight to
         our sales team.
       </p>
+
+      <div className="mt-6 border border-border-soft bg-bg-raised p-4">
+        <p className="font-mono text-xs uppercase tracking-widest text-text-faint mb-3">
+          Order Summary
+        </p>
+        <div className="divide-y divide-border-soft">
+          {items.map((item) => (
+            <div key={item.slug} className="flex items-center gap-4 py-3 first:pt-0 last:pb-0">
+              <div className="relative h-14 w-18 shrink-0 overflow-hidden bg-bg-raised-2">
+                {item.image ? (
+                  <Image src={item.image} alt={item.title} fill className="object-cover" />
+                ) : null}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium line-clamp-2">{item.title}</p>
+                <p className="mt-1 font-mono text-xs text-text-faint">{priceLabel(item.price)}</p>
+              </div>
+              <span className="shrink-0 font-mono text-sm text-accent">
+                {formatPrice(String(depositFor(item.price)))} deposit
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="mt-3 pt-3 border-t border-border-soft flex justify-between font-mono text-sm font-semibold">
+          <span>Total deposit due</span>
+          <span className="text-accent">{formatPrice(String(totalDeposit))}</span>
+        </div>
+      </div>
+
+      <ul className="mt-4 space-y-1.5 text-xs text-text-faint">
+        <li>&middot; Deposit: up to $1,000 per unit (or the item&rsquo;s full price if lower), fully refundable.</li>
+        <li>&middot; Balance is due before delivery, not at reservation.</li>
+        <li>&middot; Price lock expires 72 hours after reservation is confirmed.</li>
+        <li>&middot; Returns accepted within 7 days of delivery; return shipping and any related costs are the customer&rsquo;s responsibility.</li>
+      </ul>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">
         <div>

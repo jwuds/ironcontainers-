@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "catalog:build": "node scraper/scripts/build-catalog.js && node scraper/scripts/download-images.js"
+    "catalog:build": "node scraper/scripts/build-catalog.js && node scraper/scripts/download-images.js",
+    "indexnow:submit": "node scraper/scripts/submit-indexnow.js",
+    "sitemap:check": "node scraper/scripts/check-sitemap-urls.js"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.18",

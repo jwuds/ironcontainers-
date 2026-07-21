@@ -1,80 +1,71 @@
 # SEO Health Audit — containeronedepot.com
-Audited live: 2026-07-19
-Last updated: 2026-07-19 (post Phase 1)
+Audited live: 2026-07-21 (prior audit: 2026-07-19)
 
 ## Executive Summary
 
-**SEO Health Score: 60/100** (7 of 8 on-site categories scored; Performance still running, will shift this number once in. SXO and Backlinks are shown separately as diagnostic context, not folded into this score.)
+**SEO Health Score: 75/100** (up from 60/100 — simple average of 8 scored on-site categories: Technical, Sitemap, Content, Schema, Performance, Visual/Mobile, GEO, E-commerce. Performance is included this time, having not finished on 2026-07-19. SXO and Backlinks remain diagnostic/off-page context, not folded into this score.)
 
-**Business type:** E-commerce — industrial equipment reseller (shipping containers, refrigeration units, tanks, generators, trailers/chassis), 208 SKUs across 8 categories (212 at audit time, 4 confirmed duplicates removed since — see Phase 1 below), competing against established resellers the catalog was originally sourced from.
+**Business type:** E-commerce — industrial equipment reseller (shipping containers, refrigerated containers, tanks, generators, trailers/chassis), direct-to-buyer, 208 SKUs across 8 categories.
 
-This audit doubled as a live incident response: three specialists independently converged on the same three critical bugs from different angles (visual, schema, e-commerce, content), all of which were root-caused and fixed during the audit itself — see "Fixed during this audit" below. Phase 1 of the resulting action plan is now also complete — see "Phase 1 — complete" below. The remaining findings are genuine, open work.
+This re-audit verified every fix claimed in commits since 2026-07-19 by re-reading live production HTML/headers/JSON-LD rather than trusting commit messages — several claims checked out exactly as described, one ("checkout order summary") did not, and a new regression (`images.unoptimized: true` left over from the old hotlinking workaround) was found actively hurting mobile performance. A new, more fundamental issue also surfaced: the SXO specialist found **zero appearances of containeronedepot.com in Google search results for any target query, including a direct search for the brand name itself.**
 
 ### Top 5 findings
-1. Three critical, sitewide bugs — broken product images (Vercel quota), broken JSON-LD image URLs, and crawler-invisible descriptions — were found and fixed live during this audit.
-2. Product photos are hotlinked from third-party domains, not self-hosted — flagged independently by three specialists as a reliability, trust, and duplicate-content risk. (Still open — see Phase 2.)
-3. A near-identical, much more established competitor ("Container One" — containerone.net, 30+ years, BBB-accredited) already ranks page-1 for shared target queries — a brand-collision problem no on-site fix solves alone.
-4. Zero FAQ content or FAQPage schema anywhere — the single highest-leverage gap for AI Overview/ChatGPT citation. (Phase 2.)
-5. About/Contact pages and the blog carry very thin trust signal (no address, no bylines, no credentials) for a high-ticket B2B/B2C seller. (Phase 2.)
+1. **Critical, newly surfaced — zero search visibility.** containeronedepot.com does not appear in Google results for any of 4 target queries or a direct brand-name search; near-identical competitor domains fill the results instead. This needs a Search Console indexation check before any other fix matters — see Action Plan Phase 1.
+2. **Critical performance regression from an incomplete fix.** `next.config.ts` still sets `images.unoptimized: true`, a leftover from the old third-party-hotlinking workaround. Now that images are self-hosted, this flag serves every image at full resolution with no responsive sizing or WebP/AVIF — mobile LCP is 10.6s–18.5s (Performance score: 48/100).
+3. **New checkout bugs undermine the trust improvements this audit was sent to validate.** The flat $1,000 deposit exceeds the sale price on 12 low-ticket accessory SKUs, the checkout page shows no visible order summary despite the commit message claiming one, and no return-policy text appears anywhere on the $1,000-deposit page.
+4. **Merchant Center blockers persist.** 197 of 208 products (95%) still lack a GTIN/MPN/SKU identifier, and 91 of 208 (44%) collapse New/Used condition into a single price/Offer — both keep blocking or demoting Shopping listings.
+5. **The fixes that did land are real and verified.** All three Critical bugs from 2026-07-19 (broken product images, malformed JSON-LD image URLs, crawler-hidden truncated descriptions) are confirmed still fixed on production. Both top GEO gaps from that audit are shipped (`/llms.txt` live, FAQPage schema + visible FAQ on every product page). GEO jumped 58→79, Content 52→74, Schema 62→78.
 
-### Top 5 quick wins — status
-1. ~~Publish `/llms.txt`~~ — not yet done, Phase 2
-2. ✅ Add security headers via `next.config.ts` `headers()` — **done**
-3. ~~Populate sitemap `<lastmod>` sitewide~~ — not yet done, Phase 2
-4. ✅ Merge the near-duplicate `10ft-refrigerated-container-10ft-freezer` pair — **done**, plus 3 more confirmed duplicates found and removed
-5. ~~Add a 3-5 item FAQ block + FAQPage schema~~ — not yet done, Phase 2
-
----
-
-## Fixed during this audit (initial pass)
-
-| Fix | Affected |
-|---|---|
-| Added `images.remotePatterns` for both image hosts | Was 500ing every page using `next/image` |
-| Added `images.unoptimized` | Every product photo was broken (Vercel 402 quota) |
-| Fixed JSON-LD image URL concatenation bug | Broken structured-data images on all 212 products |
-| `ExpandableText` now always renders full text (CSS line-clamp, not JS-sliced text) | ~67% of every rewritten description was invisible to crawlers |
-| Removed `rawCategories` chip row from product pages | Was showing raw scraped marketplace taxonomy strings publicly |
-| Cleared 44 bogus `sku` values ("Graham_TX" etc. — a warehouse-location code scraped into the sku field) | Was displaying as a fake SKU on 44 product pages |
-| Removed `sourceUrl`/`siteName` from the compiled public `products.json` | Was exposing literal competitor page URLs for all 212 products in this public GitHub repo |
-| Untracked raw scrape output, scraper config, and the rewrite brief from the public repo | Named the specific competitor sites this catalog was sourced from |
-
-## Phase 1 — complete
-
-| Fix | Detail |
-|---|---|
-| Deleted 4 confirmed duplicate listings | 10ft reefer pair, 30,000-gal skid tank pair, Carrier clip-on genset pair, 20ft flat-rack pair — all verified by identical price + specs before merging. Catalog: 212 → 208. 301s added for the dropped slugs. |
-| Added baseline security headers | X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy. Full CSP deferred — needs per-request nonce middleware, a separate carefully-tested change. |
-| **Not done — availability schema** | Needs a real stock/inventory data source to fix honestly; this catalog has none (one-time scrape, not a live feed). Not fabricating a stock value just to close the item. |
-| **Left open — 3 pricing-conflict pairs** | 2 Thermo King genset pairs + 1 open-top pair have meaningfully different prices between near-identical listings. Could be genuinely different units or bad source data — needs your call, not a guess on live pricing. |
+### Top 5 quick wins
+1. Remove `images.unoptimized: true` from `next.config.ts` — expected 60-90% image payload reduction, the direct fix for mobile LCP (~1-2 hrs + re-encode)
+2. Cap the checkout deposit at item price for the 12 sub-$1,000 accessory SKUs in `depositFor()` (~1 hr)
+3. Add a visible order-summary panel + return-policy text to `/cart/checkout` (~2-3 hrs)
+4. Remove the stray `thermo-king-sg-3000-clip-on-gensets-1` redirected URL still sitting in the sitemap (~30 min)
+5. Check Google Search Console URL Inspection on the homepage and top PDPs — free to check, could be the single highest-impact discovery of this audit (~30 min)
 
 ---
 
 ## Category Scores
 
-| Category | Score | Note |
-|---|---|---|
-| Technical SEO | 78/100 | Measured pre-Phase-1; security headers finding is now resolved |
-| Sitemap | 88/100 | Structurally clean; missing `lastmod` on 225/229 URLs |
-| Content Quality & E-E-A-T | 52/100 | Good copy, was crawler-invisible (fixed); thin trust layer |
-| Schema / Structured Data | 62/100 | Architecturally correct; image bug fixed, availability still hardcoded (no data source to fix it properly) |
-| Performance (CWV) | pending | Audit still running |
-| Visual / Mobile UX | 42/100* | *Pre-fix score — both Critical findings (images) now resolved |
-| AI Search Readiness (GEO) | 58/100 | Strong SSR foundation; no FAQ, no llms.txt |
-| E-commerce / Product Data | 46/100* | *Same image-schema bug as above, now resolved |
-| *SXO (diagnostic, not scored)* | 34/100 | Why rankings are stuck — see below |
-| *Backlinks (diagnostic, not scored)* | 8/100 | Expected for a 2-week-old rebrand |
+| Category | Score (2026-07-21) | Score (2026-07-19) | Change |
+|---|---|---|---|
+| Sitemap | 90/100 | 88/100 | +2 |
+| Technical SEO | 86/100 | 78/100 | +8 |
+| Visual / Mobile | 80/100 | 42/100 | +38 |
+| AI Search Readiness (GEO) | 79/100 | 58/100 | +21 |
+| Schema / Structured Data | 78/100 | 62/100 | +16 |
+| Content Quality | 74/100 | 52/100 | +22 |
+| E-commerce SEO | 64/100 | 46/100 | +18 |
+| Performance (CWV) | 48/100 | — (didn't finish) | new |
+| *SXO (diagnostic, not scored)* | 40/100 | 34/100 | +6 |
+| *Backlinks (diagnostic, not scored)* | 8/100 | 8/100 | unchanged |
 
 Full detail for every category, finding, and recommendation: see `findings/*.md` and `audit-data.json`.
 
 ---
 
+## What actually got fixed since 2026-07-19 (verified live, not just via commit log)
+
+| Claimed fix | Commit | Verified? |
+|---|---|---|
+| Self-hosted product images, graceful fallback | `d4951fe` | ✅ Confirmed — 0 hotlinked references, 0 broken images across all pages tested |
+| Merchant Center brand type + shippingDetails | `8174c6e` | ✅ Confirmed live in JSON-LD |
+| 21 product titles fixed | `c7d77c0` | ✅ Confirmed; also verified zero exact-duplicate titles/descriptions catalog-wide |
+| Real business address + About/Contact trust content | `d5f17b3` | ✅ Confirmed live, both pages |
+| Flat $1,000 deposit, required payment method, return policy, order summary | `49fc49d` | ⚠️ **Partially false.** Deposit and required-payment-method landed; return-policy text and order summary do **not** appear on the live checkout page despite the commit message |
+| Real server-side email via Resend | `0b364cf` | ✅ Confirmed — reservation/contact/newsletter all POST to API routes |
+| (Not a commit — carried config) `images.unoptimized: true` | — | ❌ Never reverted after self-hosting landed; now the top Performance finding |
+
+Also newly shipped, not previously flagged as a target: `/llms.txt`, per-product FAQ blocks + FAQPage schema, blog-to-PDP cross-linking (`getRelevantPosts`), and 4 confirmed-duplicate SKU pairs 301/308-merged (1 of 4 similar pairs — `thermo-king-sg-3000-clip-on-gensets-1` — still needs the same treatment).
+
+---
+
 ## Why rankings are actually stuck (SXO + Backlinks synthesis)
 
-The technical/on-page work matters, but two structural facts explain most of the "not even top 50" gap independent of anything fixable in code this week:
+The on-site work this cycle was substantial and verified — but two structural facts likely explain most of the ranking gap independent of anything fixable in code:
 
-1. **Zero backlink/crawl footprint.** No Common Crawl or Wayback captures exist for this domain at any date — expected for a ~2-week-old rebrand, but it means every off-page ranking signal starts at absolute zero against competitors with a decade-plus of accumulated links.
-2. **Structural similarity to the source network.** For several target queries, the SERP is dominated by the very sites this catalog was originally scraped from (conexoffcoast.com, longbeachoffcoastdepot.com, conexdepotshipping.com), using the same template pattern. Google has limited reason to newly rank a young domain's version of content it already indexes elsewhere — reinforced by hotlinked, non-original product photos.
-3. **Brand-name collision.** "Container One" (containerone.net) is an established, BBB-accredited competitor with a near-identical name already ranking on shared queries — a positioning problem, not a technical one.
+1. **Zero confirmed Google visibility.** The SXO specialist's WebSearch checks against 4 target queries plus a direct brand-name search returned zero appearances of containeronedepot.com anywhere in results. This is a bigger, more fundamental problem than any on-page finding above — **it should be verified via Search Console URL Inspection before investing further in on-page work**, since it's possible (though unconfirmed) that pages aren't indexed at all yet for a domain this young (~18 days since rebrand).
+2. **Zero backlink/crawl footprint, still unconfirmed either direction this round.** Common Crawl queries timed out rather than completing; the prior audit's confirmed-zero result is carried forward as the last known state. Not unusual for an 18-day-old domain.
+3. **Brand-name collision, now confirmed against more competitors.** Beyond `containerone.net`, this pass surfaced `containerone.com`, `containerdepotco.com`, and `houstoncontainerdepot.com` also ranking for the same queries, with no on-site trust counter-signal (reviews, BBB, years-in-business) to differentiate.
 
-None of this means the on-site work is wasted — it's the necessary foundation for when authority starts accumulating — but it sets realistic expectations: this is a 60-90 day-minimum runway before ranking movement, not a switch that flips this week.
+None of this makes the on-site work wasted — it's the necessary foundation for when the domain does get indexed and starts accumulating authority — but the Search Console check in Phase 1 should happen before anything else, since no amount of on-page polish converts traffic that never arrives.

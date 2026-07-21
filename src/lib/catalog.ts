@@ -20,6 +20,7 @@ export type Group = {
   slug: string;
   name: string;
   blurb: string;
+  intro?: string;
   count: number;
   heroImage: string | null;
 };
@@ -35,6 +36,28 @@ export function getGroupBySlug(slug: string): Group | undefined {
   return groups.find((g) => g.slug === slug);
 }
 
+// Editorial adjacency between categories — real product-line relationships
+// (a reefer buyer may need a replacement genset; a tank buyer may need an
+// LPG transport trailer), not derived from the data. Used to cross-link
+// category pages so crawl paths between related categories don't rely
+// solely on the flat footer list.
+const RELATED_GROUPS: Record<string, string[]> = {
+  "shipping-containers": ["offshore-certified", "refrigerated-containers"],
+  "refrigerated-containers": ["refrigeration-gensets", "shipping-containers"],
+  "offshore-certified": ["shipping-containers", "refrigerated-containers"],
+  "refrigeration-gensets": ["refrigerated-containers", "generators-power"],
+  "generators-power": ["refrigeration-gensets"],
+  tanks: ["trailers-chassis"],
+  "trailers-chassis": ["tanks", "shipping-containers"],
+  "accessories-parts": ["shipping-containers"],
+};
+
+export function getRelatedGroups(slug: string): Group[] {
+  return (RELATED_GROUPS[slug] ?? [])
+    .map((s) => getGroupBySlug(s))
+    .filter((g): g is Group => Boolean(g));
+}
+
 export function getAllProducts(): Product[] {
   return products;
 }
@@ -45,6 +68,34 @@ export function getProductBySlug(slug: string): Product | undefined {
 
 export function getProductsByGroup(slug: string): Product[] {
   return products.filter((p) => p.groups.includes(slug));
+}
+
+// Products worth comparing side-by-side with this one — same specific
+// sub-category (e.g. "40FT Shipping Container"), not just the same broad
+// group, so the table stays a real apples-to-apples comparison instead of
+// a grab-bag. Picks whichever of this product's rawCategories has the
+// fewest total members (excluding categories with only this one product
+// in them), so a product tagged into both a broad and a narrow category
+// compares against the narrow one.
+export function getComparableProducts(product: Product, limit = 6): Product[] {
+  let bestCategory: string | null = null;
+  let bestCount = Infinity;
+  for (const cat of product.rawCategories) {
+    const count = products.filter((p) => p.rawCategories.includes(cat)).length;
+    if (count > 1 && count < bestCount) {
+      bestCategory = cat;
+      bestCount = count;
+    }
+  }
+  if (!bestCategory) return [];
+  return products
+    .filter((p) => p.slug !== product.slug && p.rawCategories.includes(bestCategory!))
+    .sort((a, b) => {
+      const av = Number(a.regularPrice) || Infinity;
+      const bv = Number(b.regularPrice) || Infinity;
+      return av - bv;
+    })
+    .slice(0, limit);
 }
 
 export function getRelatedProducts(product: Product, limit = 4): Product[] {
@@ -127,7 +178,10 @@ export function getCleanExcerpt(
 export function formatPrice(value: string | null): string | null {
   if (!value) return null;
   const num = Number(value);
-  if (Number.isNaN(num)) return null;
+  // A handful of scraped listings carry "0.00" for missing pricing data,
+  // not an actual $0 price — treat non-positive the same as absent so
+  // callers fall back to "Price on request" instead of showing "$0".
+  if (Number.isNaN(num) || num <= 0) return null;
   return num.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
