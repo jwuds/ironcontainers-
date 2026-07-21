@@ -6,6 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import WhyBuyGrid from "@/components/WhyBuyGrid";
 import IndustriesGrid from "@/components/IndustriesGrid";
 import HowItWorks from "@/components/HowItWorks";
+import PartnerLogos from "@/components/PartnerLogos";
 import Reveal from "@/components/Reveal";
 import { SITE } from "@/lib/site";
 
@@ -191,6 +192,13 @@ export default function Home() {
               Browse Inventory
             </Link>
           </div>
+        </div>
+      </Reveal>
+
+      {/* Partner logos, just above the footer */}
+      <Reveal as="section" className="border-t border-border">
+        <div className="py-16 sm:py-20">
+          <PartnerLogos />
         </div>
       </Reveal>
     </div>

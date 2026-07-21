@@ -1,0 +1,86 @@
+[
+  {
+    "slug": "baltic-express-line",
+    "name": "Baltic Express Line",
+    "src": "/partners/baltic-express-line.webp",
+    "width": 561,
+    "height": 375
+  },
+  {
+    "slug": "carpenters-shipping",
+    "name": "Carpenters Shipping",
+    "src": "/partners/carpenters-shipping.webp",
+    "width": 254,
+    "height": 138
+  },
+  {
+    "slug": "c-star-line",
+    "name": "C Star Line",
+    "src": "/partners/c-star-line.webp",
+    "width": 280,
+    "height": 38
+  },
+  {
+    "slug": "maersk",
+    "name": "Maersk",
+    "src": "/partners/maersk.webp",
+    "width": 351,
+    "height": 81
+  },
+  {
+    "slug": "interasia",
+    "name": "Interasia",
+    "src": "/partners/interasia.webp",
+    "width": 524,
+    "height": 202
+  },
+  {
+    "slug": "cma-cgm",
+    "name": "CMA CGM",
+    "src": "/partners/cma-cgm.webp",
+    "width": 640,
+    "height": 424
+  },
+  {
+    "slug": "united",
+    "name": "United",
+    "src": "/partners/united.webp",
+    "width": 370,
+    "height": 168
+  },
+  {
+    "slug": "zim",
+    "name": "ZIM",
+    "src": "/partners/zim.webp",
+    "width": 640,
+    "height": 214
+  },
+  {
+    "slug": "vuxx-shipping",
+    "name": "Vuxx Shipping",
+    "src": "/partners/vuxx-shipping.webp",
+    "width": 640,
+    "height": 202
+  },
+  {
+    "slug": "hub-shipping",
+    "name": "Hub Shipping",
+    "src": "/partners/hub-shipping.webp",
+    "width": 640,
+    "height": 634
+  },
+  {
+    "slug": "hapag-lloyd",
+    "name": "Hapag-Lloyd",
+    "src": "/partners/hapag-lloyd.webp",
+    "width": 640,
+    "height": 99
+  },
+  {
+    "slug": "one-line",
+    "name": "ONE (Ocean Network Express)",
+    "src": "/partners/one-line.webp",
+    "width": 640,
+    "height": 640
+  }
+]

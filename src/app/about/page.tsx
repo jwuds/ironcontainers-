@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllProducts, getGroups } from "@/lib/catalog";
+import PartnerLogos from "@/components/PartnerLogos";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -121,6 +122,10 @@ export default function AboutPage() {
             </span>
           ))}
         </div>
+      </div>
+
+      <div className="mt-10">
+        <PartnerLogos compact />
       </div>
 
       <div className="mt-14">

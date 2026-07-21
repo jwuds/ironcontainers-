@@ -44,6 +44,10 @@ yarn-error.log*
 # alongside this repo on disk — not part of the site.
 /seomachine/
 
+# Raw source photos (phone camera originals) — processed, web-ready copies
+# are committed under public/ instead.
+/container catalog/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
