@@ -176,6 +176,15 @@ export default function MobileNav({ groups }: { groups: Group[] }) {
                 </li>
                 <li>
                   <Link
+                    href="/transformations"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center min-h-[44px] px-4 text-sm font-medium hover:text-accent hover:bg-bg-raised transition-colors"
+                  >
+                    Transformations
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/blog"
                     onClick={() => setOpen(false)}
                     className="flex items-center min-h-[44px] px-4 text-sm font-medium hover:text-accent hover:bg-bg-raised transition-colors"

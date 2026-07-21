@@ -1,0 +1,98 @@
+[
+  {
+    "slug": "porch-deck-cabin",
+    "caption": "Deck & porch add-on",
+    "featured": false,
+    "src": "/transformations/porch-deck-cabin.webp",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "slug": "elevated-cabin-piers",
+    "caption": "Elevated cabin on piers",
+    "featured": true,
+    "src": "/transformations/elevated-cabin-piers.webp",
+    "width": 1080,
+    "height": 1080
+  },
+  {
+    "slug": "living-roof-ranch",
+    "caption": "Living-roof ranch conversion",
+    "featured": true,
+    "src": "/transformations/living-roof-ranch.webp",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "slug": "modern-two-story",
+    "caption": "Multi-level modern build",
+    "featured": true,
+    "src": "/transformations/modern-two-story.webp",
+    "width": 1020,
+    "height": 1280
+  },
+  {
+    "slug": "oceanfront-retreat",
+    "caption": "Oceanfront two-story retreat",
+    "featured": false,
+    "src": "/transformations/oceanfront-retreat.webp",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "slug": "showroom-lineup",
+    "caption": "Showroom line-up",
+    "featured": false,
+    "src": "/transformations/showroom-lineup.webp",
+    "width": 1280,
+    "height": 958
+  },
+  {
+    "slug": "woodgrain-glass-doors",
+    "caption": "Woodgrain cabin, folding glass doors",
+    "featured": false,
+    "src": "/transformations/woodgrain-glass-doors.webp",
+    "width": 1280,
+    "height": 960
+  },
+  {
+    "slug": "finished-cabins-row",
+    "caption": "Finished cabins, ready to ship",
+    "featured": false,
+    "src": "/transformations/finished-cabins-row.webp",
+    "width": 1280,
+    "height": 958
+  },
+  {
+    "slug": "covered-porch-install",
+    "caption": "Covered-porch cabin, install in progress",
+    "featured": false,
+    "src": "/transformations/covered-porch-install.webp",
+    "width": 1280,
+    "height": 958
+  },
+  {
+    "slug": "charcoal-panel-cabin",
+    "caption": "Charcoal panel cabin",
+    "featured": false,
+    "src": "/transformations/charcoal-panel-cabin.webp",
+    "width": 1280,
+    "height": 958
+  },
+  {
+    "slug": "cream-panel-cabin",
+    "caption": "Cream panel cabin",
+    "featured": false,
+    "src": "/transformations/cream-panel-cabin.webp",
+    "width": 1280,
+    "height": 957
+  },
+  {
+    "slug": "woodgrain-covered-deck",
+    "caption": "Woodgrain cabin with covered deck",
+    "featured": true,
+    "src": "/transformations/woodgrain-covered-deck.webp",
+    "width": 1280,
+    "height": 958
+  }
+]

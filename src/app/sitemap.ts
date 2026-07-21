@@ -15,6 +15,7 @@ const catalogLastModified = new Date(catalogMeta.generatedAt);
 // about/page.tsx or contact/page.tsx content actually changes.
 const ABOUT_LAST_MODIFIED = new Date("2026-07-20T00:09:49+01:00");
 const CONTACT_LAST_MODIFIED = new Date("2026-07-21T01:23:51+01:00");
+const TRANSFORMATIONS_LAST_MODIFIED = new Date("2026-07-21T00:00:00+01:00");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const blogLastModified = getAllPosts().reduce<Date>((latest, post) => {
@@ -26,6 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: SITE.url, changeFrequency: "daily", priority: 1, lastModified: catalogLastModified },
     { url: `${SITE.url}/catalog`, changeFrequency: "daily", priority: 0.9, lastModified: catalogLastModified },
     { url: `${SITE.url}/about`, changeFrequency: "monthly", priority: 0.5, lastModified: ABOUT_LAST_MODIFIED },
+    { url: `${SITE.url}/transformations`, changeFrequency: "monthly", priority: 0.5, lastModified: TRANSFORMATIONS_LAST_MODIFIED },
     { url: `${SITE.url}/contact`, changeFrequency: "monthly", priority: 0.5, lastModified: CONTACT_LAST_MODIFIED },
     { url: `${SITE.url}/blog`, changeFrequency: "weekly", priority: 0.6, lastModified: blogLastModified },
   ];

@@ -7,6 +7,7 @@ import WhyBuyGrid from "@/components/WhyBuyGrid";
 import IndustriesGrid from "@/components/IndustriesGrid";
 import HowItWorks from "@/components/HowItWorks";
 import PartnerLogos from "@/components/PartnerLogos";
+import TransformationsTeaser from "@/components/TransformationsTeaser";
 import Reveal from "@/components/Reveal";
 import { SITE } from "@/lib/site";
 
@@ -129,6 +130,10 @@ export default function Home() {
       </Reveal>
       <Reveal>
         <IndustriesGrid />
+      </Reveal>
+
+      <Reveal as="section" className="border-t border-border py-16 sm:py-20">
+        <TransformationsTeaser />
       </Reveal>
 
       {/* Featured products */}
